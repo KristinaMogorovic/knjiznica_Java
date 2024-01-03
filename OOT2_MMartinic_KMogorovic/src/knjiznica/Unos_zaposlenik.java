@@ -24,7 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Statement;
 
-//unos zaposlenika
+//unos zaposlenika bla bla bla
 
 public class Unos_zaposlenik {
 
