@@ -61,7 +61,7 @@ public class Unos_knjiga {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1079, 572);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNaziv = new JLabel("naziv");
@@ -221,7 +221,7 @@ public class Unos_knjiga {
 					if(rsOdjeljak.next()) {
 						idOdjeljak=rsOdjeljak.getInt(1);
 					}
-					String upit1="INSERT INTO RWAknjiga VALUES(NULL, ?, ?, ?, ?, ?, ?, ?,?,?, NULL ,NULL)";
+					String upit1="INSERT INTO RWAknjiga VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, null,?, NULL ,NULL)";
 					PreparedStatement psInsertKnjiga=con.prepareStatement(upit1); 
 					psInsertKnjiga.setString(1, nazivs);
 					psInsertKnjiga.setString(2, godinas);

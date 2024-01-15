@@ -68,7 +68,7 @@ public class Unos_zaposlenik {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 765, 571);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("šifra");
@@ -178,7 +178,7 @@ public class Unos_zaposlenik {
 			JOptionPane.showMessageDialog(null, "Greška u prikazu podataka tablice");
 		}//catch
 		
-		
+		//UPIS ZAPOSLENIKA U BAZU
 		JButton btnNewButton = new JButton("spremi");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -199,7 +199,7 @@ public class Unos_zaposlenik {
 						Class.forName("com.mysql.cj.jdbc.Driver");
 						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 						
-						//provjera dal sifra vec postoji
+						//provjera dal sifra zaposlenika vec postoji
 						String provjera = "SELECT * FROM RWA_knjiznicar WHERE sifra_knjiznicar=?";
 						PreparedStatement ps=con.prepareStatement(provjera);
 						ps.setString(1, sifras);
@@ -262,6 +262,50 @@ public class Unos_zaposlenik {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {//brisanje odabranog reda
 				//sql naredba = DELETE FROM RWA_knjiznicar WHERE sifra_knjiznicar=?;
+				
+				//znat koji je redak odabran u tablici u dizajnu
+				
+				DefaultTableModel model=(DefaultTableModel)table.getModel();
+				int odabraniRedak=table.getSelectedRow();
+				
+				if(odabraniRedak >= 0) { //je li odabran NE KOJI
+					try {
+						
+						int sifra=Integer.parseInt(table.getValueAt(odabraniRedak, 0).toString());
+						Class.forName("com.mysql.cj.jdbc.Driver");
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+						
+						String upit="DELETE FROM RWA_knjiznicar WHERE sifra_knjiznicar=?";
+						PreparedStatement ps=con.prepareStatement(upit);
+						
+						ps.setInt(1,sifra); //1 prvo misto
+						
+						int rezultat=ps.executeUpdate();
+						
+						if(rezultat==1) {
+							
+							DefaultTableModel model1=(DefaultTableModel)table.getModel();
+							model1.removeRow(odabraniRedak);
+							
+							JOptionPane.showMessageDialog(null, "Autor je uspješno izbrisan!");
+							
+						} //if drugi
+						else 
+						{
+							JOptionPane.showMessageDialog(null, "Autora nije moguće izbrisati!");
+						} //else drugi
+						
+					}//try
+					catch(Exception e1) 
+					{
+						JOptionPane.showMessageDialog(null, "Zaposlenik je potpisan na posudbi. Nemožete ga izbrisati.");
+					} //catch
+					
+				} //if prvi
+				else 
+				{
+					JOptionPane.showMessageDialog(null, "Nije odabran redak tablice!");
+				} //else drugi
 				
 			}
 		});

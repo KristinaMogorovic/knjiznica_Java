@@ -4,9 +4,15 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.awt.event.ActionEvent;
 
 public class Unos_autor {
 
@@ -43,7 +49,7 @@ public class Unos_autor {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 431, 250);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Ime autora:");
@@ -64,7 +70,38 @@ public class Unos_autor {
 		frame.getContentPane().add(prezime);
 		prezime.setColumns(10);
 		
+		//spremi autora
 		JButton btnNewButton = new JButton("Spremi");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String imes, prezimes;
+				imes=ime.getText();
+				prezimes=prezime.getText();
+				
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					
+					String upit= "INSERT INTO RWAautor (ime, prezime) VALUES (?, ?);";
+					PreparedStatement psInsert=con.prepareStatement(upit);
+					psInsert.setString(1, imes);
+					psInsert.setString(2, prezimes);
+					
+					int redakaUbaceno = psInsert.executeUpdate();
+					if (redakaUbaceno==1) {
+						JOptionPane.showMessageDialog(null, "Unos uspješan");
+					}//if
+					else {
+						JOptionPane.showMessageDialog(null, "Greška pri unosu.");
+					}//else
+					
+				}
+				catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1);
+				}
+				
+			}
+		});
 		btnNewButton.setBounds(272, 151, 85, 21);
 		frame.getContentPane().add(btnNewButton);
 		

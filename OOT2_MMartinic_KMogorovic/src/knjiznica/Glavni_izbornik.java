@@ -54,7 +54,7 @@ public class Glavni_izbornik {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 466, 730);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JButton B_unos_clan = new JButton("unos članova");
