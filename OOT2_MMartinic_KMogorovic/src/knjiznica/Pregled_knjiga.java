@@ -109,9 +109,9 @@ public class Pregled_knjiga {
 					String jezik=rs.getString(7);
 					int id_klasOznake=rs.getInt(8);
 					String slika=rs.getString(9);
-					int ukupan_broj=rs.getInt(10);
-					int rezervirani=rs.getInt(11);
-					int posudeni=rs.getInt(12);
+					int ukupan_broj=rs.getInt(11);
+					int rezervirani=rs.getInt(12);
+					int posudeni=rs.getInt(13);
 					
 					model.addRow(new Object[] {id_knjiga, naziv, godina_izdanja, ISBN, nakladnik, opis, jezik, id_klasOznake, slika, ukupan_broj, rezervirani, posudeni});
 					
