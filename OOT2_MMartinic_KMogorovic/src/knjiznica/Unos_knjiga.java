@@ -1,6 +1,7 @@
 package knjiznica;
 
 import java.awt.EventQueue;
+import java.lang.reflect.Method;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,22 +16,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.JSeparator;
 
 public class Unos_knjiga {
 
 	private JFrame frame;
 	private JTextField godina;
-	private JTextField ime;
 	private JTextField naziv;
 	private JTextField nakladnik;
 	private JTextField jezik;
 	private JTextField isbn;
 	private JTextField slika;
 	private JTextField primjerci;
-	private JTextField prezime;
+	
 
 	/**
 	 * Launch the application.
@@ -60,7 +63,7 @@ public class Unos_knjiga {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1079, 572);
+		frame.setBounds(100, 100, 750, 572);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -134,42 +137,71 @@ public class Unos_knjiga {
 		primjerci.setColumns(10);
 		primjerci.setBounds(166, 454, 86, 20);
 		frame.getContentPane().add(primjerci);
+				
+		JLabel lblNewLabel = new JLabel("Ime autora: ");
+		lblNewLabel.setBounds(437, 97, 102, 14);
+		frame.getContentPane().add(lblNewLabel);
+				
+		JLabel lblNewLabel_1 = new JLabel("Prezime autora:");
+		lblNewLabel_1.setBounds(437, 49, 123, 14);
+		frame.getContentPane().add(lblNewLabel_1);
+
+////////////////////////////////////////stavljanje prezimena u combo box///////////////////////////////////////////////////////////
+		JComboBox prezime = new JComboBox();
+		prezime.setBounds(557, 46, 117, 21);
+		frame.getContentPane().add(prezime);
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			String upit = "SELECT prezime FROM RWAautor;";
+			Statement stmt=con.createStatement();
+			ResultSet rs=stmt.executeQuery(upit);
+			while (rs.next()) {
+				String podatak =rs.getString(1);//3. atribut iz tablice
+				prezime.addItem(podatak);
+			}
+		}//try
+		catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, "Greška pri povlačenju podataka o prezimenu autora.");
+		}//catch
 		
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(UIManager.getColor("Button.highlight"));
-		panel.setBounds(387, 33, 227, 211);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
+//////////////////////stavljanje imena autora ovisno koje je prezime/////////////////////////////////////////////////////////////////
+		JComboBox ime = new JComboBox();
+		ime.setBounds(557, 97, 117, 21);
+		frame.getContentPane().add(ime);
+		prezime.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // Get the selected item when an item is chosen
+		        String odabran_autor = (String) prezime.getSelectedItem();
+		        //System.out.println("Selected prezime: " + odabran_autor);//provjera
+
+		        try {
+		            Class.forName("com.mysql.cj.jdbc.Driver");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+
+		            String upit = "SELECT ime FROM RWAautor WHERE prezime=?";
+		            PreparedStatement psInsertPrezimeAutora = con.prepareStatement(upit);
+		            psInsertPrezimeAutora.setString(1, odabran_autor);
+
+		            ResultSet rs = psInsertPrezimeAutora.executeQuery();
+
+		            ime.removeAllItems();
+
+		            while (rs.next()) {
+		                String podatak = rs.getString(1);
+		                ime.addItem(podatak);
+		            }
+		        } 
+		        catch (Exception e1) {
+		            JOptionPane.showMessageDialog(null, e1);
+		        }
+		    }
+		});
 		
-		JLabel lblAutor = new JLabel("autor");
-		lblAutor.setBounds(100, 23, 82, 14);
-		panel.add(lblAutor);
-		
-		JLabel lblNewLabel = new JLabel("ime:");
-		lblNewLabel.setBounds(37, 64, 46, 14);
-		panel.add(lblNewLabel);
-		
-		ime = new JTextField();
-		ime.setBounds(112, 61, 95, 20);
-		panel.add(ime);
-		ime.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("prezime:");
-		lblNewLabel_1.setBounds(37, 98, 76, 14);
-		panel.add(lblNewLabel_1);
-		
-		prezime = new JTextField();
-		prezime.setBounds(112, 95, 95, 20);
-		panel.add(prezime);
-		prezime.setColumns(10);
-		
-		
-		JButton btnNewButton_1 = new JButton("dodaj novog autora");
-		btnNewButton_1.setBounds(37, 165, 145, 23);
-		panel.add(btnNewButton_1);
-		
-		
+
+////////////////////////////////////////////////unos klasifikacijskih oznaka u combo box////////////////////////////
 		JComboBox odjeljak = new JComboBox();
 		odjeljak.setBounds(122, 176, 193, 22);
 		frame.getContentPane().add(odjeljak);
@@ -192,15 +224,15 @@ public class Unos_knjiga {
 		radnja.setBounds(118, 260, 380, 160);
 		frame.getContentPane().add(radnja);
 		
-		
+/////////////////////////////////////////////////////unos nove knjige/////////////////////////////////////////////////////
 		JButton btnNewButton = new JButton("unesi");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nazivs, imes, prezimes, godinas, nakladniks, jeziks, odjeljaks, isbns, slikas, radnjas, primjercis;
 				
 				nazivs = naziv.getText();	
-				imes =ime.getText();
-				prezimes=prezime.getText();
+				imes =(String)ime.getSelectedItem();
+				prezimes=(String)prezime.getSelectedItem();
 				godinas=godina.getText();
 				nakladniks=nakladnik.getText();
 				jeziks=jezik.getText();
@@ -214,6 +246,7 @@ public class Unos_knjiga {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 					
+					//selektiranje id odabrane klasifikacijske oznake - FK
 					String upitOdjeljak="SELECT id_KlasOznake FROM RWAklasifikacijska_oznaka WHERE odjeljak='"+odjeljaks+"'";
 					Statement stmtOdjeljak=con.createStatement();
 					ResultSet rsOdjeljak=stmtOdjeljak.executeQuery(upitOdjeljak);
@@ -221,6 +254,9 @@ public class Unos_knjiga {
 					if(rsOdjeljak.next()) {
 						idOdjeljak=rsOdjeljak.getInt(1);
 					}
+					System.out.println("idOdjeljak="+idOdjeljak);
+					
+					//unos nove knjige u bazu
 					String upit1="INSERT INTO RWAknjiga VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, null,?, NULL ,NULL)";
 					PreparedStatement psInsertKnjiga=con.prepareStatement(upit1); 
 					psInsertKnjiga.setString(1, nazivs);
@@ -232,7 +268,8 @@ public class Unos_knjiga {
 					psInsertKnjiga.setInt(7, idOdjeljak);
 					psInsertKnjiga.setString(8, slikas);
 					psInsertKnjiga.setString(9, primjercis);
-					
+
+					//provjera da je samo jednom ubačena u bazu
 					int redakaUbaceno = psInsertKnjiga.executeUpdate();
 					if (redakaUbaceno==1) {
 						JOptionPane.showMessageDialog(null, "knjiga zapisana u bazu");
@@ -241,7 +278,17 @@ public class Unos_knjiga {
 						JOptionPane.showMessageDialog(null, "knjiga nije zapisana u bazu");
 					}
 					
-
+				}
+				catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, "Došlo je do greške pri upisu knjige u bazu.");
+				}
+				
+				//upis u agregaciju knjige-autor
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					
+					//selektiranje id autora knjige
 					String upitAutor="SELECT id_autor FROM RWAautor WHERE ime='"+imes+"' AND prezime='"+prezimes+"' ";
 					Statement stmtAutor=con.createStatement();
 					ResultSet rsAutor=stmtAutor.executeQuery(upitAutor);
@@ -249,8 +296,9 @@ public class Unos_knjiga {
 					if(rsAutor.next()) {
 						idAutor=rsAutor.getInt(1);
 					}
-					System.out.println(idAutor);
+					System.out.println("idAutor="+idAutor);
 					
+					//selektiranje id upisane knjige
 					String upitKnjiga="SELECT id_knjiga FROM RWAknjiga WHERE isbn='"+isbns+"' AND naziv='"+nazivs+"'  ";
 					Statement stmtKnjiga=con.createStatement();
 					ResultSet rsKnjiga=stmtKnjiga.executeQuery(upitKnjiga);
@@ -258,25 +306,32 @@ public class Unos_knjiga {
 					if(rsKnjiga.next()) {
 						idKnjiga=rsKnjiga.getInt(1);
 					}
-					System.out.println(idKnjiga);
+					System.out.println("idKnjiga="+idKnjiga);
 					
-					String upit2="INSERT INTO RWAautor_knjiga VALUES (?,?)";
-					PreparedStatement psInsertKnjAut=con.prepareStatement(upit2);
+					//upis u agregaciju
+					String upit_agregacija="INSERT INTO RWAautor_knjiga VALUES (?, ?);";
+					PreparedStatement psInsertKnjAut=con.prepareStatement(upit_agregacija);
 					psInsertKnjAut.setInt(1, idKnjiga);
 					psInsertKnjAut.setInt(2, idAutor);
-
-					
+					int rsAgregacija=psInsertKnjAut.executeUpdate();
 				}
-				catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, e2);
+				catch (Exception e3) {
+					JOptionPane.showMessageDialog(null, "Greška pri povezivanju knjige s autorom.");
 				}
-				
 				
 				
 			}
 		});
 		btnNewButton.setBounds(471, 485, 89, 23);
 		frame.getContentPane().add(btnNewButton);
+		
+		
+		
+		
+		JButton btnNewButton_1 = new JButton("dodaj novog autora");
+		btnNewButton_1.setBounds(471, 151, 145, 23);
+		frame.getContentPane().add(btnNewButton_1);
+		
 		
 		
 	}
