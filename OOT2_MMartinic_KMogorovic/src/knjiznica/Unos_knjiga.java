@@ -248,11 +248,11 @@ public class Unos_knjiga {
 					
 					//selektiranje id odabrane klasifikacijske oznake - FK
 					String upitOdjeljak="SELECT id_KlasOznake FROM RWAklasifikacijska_oznaka WHERE odjeljak='"+odjeljaks+"'";
-					Statement stmtOdjeljak=con.createStatement();
-					ResultSet rsOdjeljak=stmtOdjeljak.executeQuery(upitOdjeljak);
-					int idOdjeljak=0;
-					if(rsOdjeljak.next()) {
-						idOdjeljak=rsOdjeljak.getInt(1);
+					Statement stmtOdjeljak=con.createStatement(); //priprema upita
+					ResultSet rsOdjeljak=stmtOdjeljak.executeQuery(upitOdjeljak); //izvršavanje upita - rezultat
+					int idOdjeljak=0; //varijabla u koju će se spremit id
+					if(rsOdjeljak.next()) { //čitanje rezultata - treba bit baren jedan
+						idOdjeljak=rsOdjeljak.getInt(1); //spremi taj rezultat u varijablu koja će se pole koristit
 					}
 					System.out.println("idOdjeljak="+idOdjeljak);
 					
@@ -292,11 +292,11 @@ public class Unos_knjiga {
 					String upitAutor="SELECT id_autor FROM RWAautor WHERE ime='"+imes+"' AND prezime='"+prezimes+"' ";
 					Statement stmtAutor=con.createStatement();
 					ResultSet rsAutor=stmtAutor.executeQuery(upitAutor);
-					int idAutor=0;
+					int idAutor=0; //varijabla u koju ce se spremit id autora
 					if(rsAutor.next()) {
-						idAutor=rsAutor.getInt(1);
+						idAutor=rsAutor.getInt(1);//rezultat iz upita spremi u varijablu
 					}
-					System.out.println("idAutor="+idAutor);
+					System.out.println("idAutor="+idAutor); //provjera da vidin ca se je spremilo u varijablu
 					
 					//selektiranje id upisane knjige
 					String upitKnjiga="SELECT id_knjiga FROM RWAknjiga WHERE isbn='"+isbns+"' AND naziv='"+nazivs+"'  ";
@@ -304,15 +304,15 @@ public class Unos_knjiga {
 					ResultSet rsKnjiga=stmtKnjiga.executeQuery(upitKnjiga);
 					int idKnjiga=0;
 					if(rsKnjiga.next()) {
-						idKnjiga=rsKnjiga.getInt(1);
+						idKnjiga=rsKnjiga.getInt(1);//rezultat iz upita spremi u varijablu
 					}
-					System.out.println("idKnjiga="+idKnjiga);
+					System.out.println("idKnjiga="+idKnjiga);//provjera da vidin ca se je spremilo u varijablu
 					
 					//upis u agregaciju
 					String upit_agregacija="INSERT INTO RWAautor_knjiga VALUES (?, ?);";
 					PreparedStatement psInsertKnjAut=con.prepareStatement(upit_agregacija);
-					psInsertKnjAut.setInt(1, idKnjiga);
-					psInsertKnjAut.setInt(2, idAutor);
+					psInsertKnjAut.setInt(1, idKnjiga);//u tablicu se inserta rezultat iz varijable idKnjiga-linija307
+					psInsertKnjAut.setInt(2, idAutor);//u tablicu se inserta rezultat iz varijable idAutor-linija297
 					int rsAgregacija=psInsertKnjAut.executeUpdate();
 				}
 				catch (Exception e3) {
