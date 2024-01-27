@@ -1,6 +1,8 @@
 package knjiznica;
 
 import java.awt.EventQueue;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -32,6 +34,9 @@ public class Pregled_posudba {
 	private JTextField trazilica;
 	
 	private int id_posudba; //za izvršavanje ažuriranja
+	private JTextField TXT_stv_dat_povrata;
+	private int odabraniRedak;
+	private int id_odabrane_posudbe;
 
 	/**
 	 * Launch the application.
@@ -61,7 +66,7 @@ public class Pregled_posudba {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1033, 595);
+		frame.setBounds(100, 100, 1122, 624);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -69,7 +74,7 @@ public class Pregled_posudba {
 					
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(45, 196, 947, 218);
+		scrollPane.setBounds(10, 163, 1068, 220);
 		frame.getContentPane().add(scrollPane);
 		
 		tablica = new JTable();
@@ -78,7 +83,7 @@ public class Pregled_posudba {
 			new Object[][] {
 			},
 			new String[] {
-				"id_posudba", "id_clan", "id_knjiga", "sifra_knjiznicar", "datum_posudbe", "datum_povrata", "stvarni_dat_povrata", "zakasnina"
+				"id_posudba","naziv_knjige","ime_autora","prezime_autora", "prezime_clana","id_clana", "datum_posudbe", "stvarni_dat_povrata", "zakasnina", "sifra_knjiznicar"  
 			}
 				){
 			boolean[] columnEditables = new boolean[] {
@@ -93,7 +98,16 @@ public class Pregled_posudba {
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
-			String upit="SELECT * FROM RWAposudba";
+			String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe_string, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
+					+ "FROM RWAposudba p\r\n"
+					+ "INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
+					+ "INNER JOIN RWAautor_knjiga ak ON k.id_knjiga = ak.id_knjiga\r\n"
+					+ "INNER JOIN RWAautor a ON ak.id_autor = a.id_autor\r\n"
+					+ "INNER JOIN RWAclan c ON p.id_clan = c.id_clan\r\n"
+					+ "LEFT JOIN RWA_knjiznicar posudba ON p.sifra_knjiznicar = posudba.sifra_knjiznicar;\r\n"
+					+ "";
+			
+			
 			Statement stmt=con.createStatement();
 			ResultSet rs=stmt.executeQuery(upit);
 			
@@ -102,15 +116,17 @@ public class Pregled_posudba {
 			while(rs.next()) {
 
 				int id_posudbe=rs.getInt(1); 
-				int id_clan=rs.getInt(2);
-				int id_knjiga=rs.getInt(3);
-				int sifra_knjiznicar=rs.getInt(4);
-				Date datum_posudbe=rs.getDate(5);
-				Date datum_povrata=rs.getDate(6);
-				Date stvarni_dat_povrata=rs.getDate(7);
-				float zakasnina=rs.getFloat(8);
+				String naziv_knjige=rs.getString(2);
+				String ime_autora=rs.getString(3);
+				String prezime_autora=rs.getString(4);
+				String prezime_clana=rs.getString(5);
+				int id_clana=rs.getInt(6);
+				String datum_posudbe=rs.getString(7);
+				String stvarni_dat_povrata=rs.getString(8);
+				float zakasnina=rs.getFloat(9);
+				int sifra_knjiznicar=rs.getInt(10);
 				
-				model.addRow(new Object[] {id_posudbe, id_clan, id_knjiga, sifra_knjiznicar, datum_posudbe, datum_povrata, stvarni_dat_povrata, zakasnina});
+				model.addRow(new Object[] {id_posudbe, naziv_knjige, ime_autora, prezime_autora, prezime_clana, id_clana, datum_posudbe, stvarni_dat_povrata, zakasnina, sifra_knjiznicar});
 				
 			} //while
 			
@@ -257,7 +273,7 @@ public class Pregled_posudba {
 			} //PUBLIC VOID
 		}); //action listener
 		
-		btnNewButton_1.setBounds(526, 449, 95, 45);
+		btnNewButton_1.setBounds(34, 417, 95, 45);
 		frame.getContentPane().add(btnNewButton_1);
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////*AŽURIRANJE*/////////////////
@@ -269,44 +285,54 @@ public class Pregled_posudba {
 				
 				//ispis u tablicu
 				DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+				model.setRowCount(0);
 				
-				
-				try {
+				try
+				{
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe_string, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
+							+ "FROM RWAposudba p\r\n"
+							+ "INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
+							+ "INNER JOIN RWAautor_knjiga ak ON k.id_knjiga = ak.id_knjiga\r\n"
+							+ "INNER JOIN RWAautor a ON ak.id_autor = a.id_autor\r\n"
+							+ "INNER JOIN RWAclan c ON p.id_clan = c.id_clan\r\n"
+							+ "LEFT JOIN RWA_knjiznicar posudba ON p.sifra_knjiznicar = posudba.sifra_knjiznicar;\r\n"
+							+ "";
 					
-					model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
-					String upit = "SELECT * FROM RWAposudba";
 					
-				//	String upit="UPDATE RWAposudba SET id_posudbe=?, id_clan=?, id_knjiga=?, sifra_knjiznicar=?, datum_posudbe=?, datum_povratka=?, stvarni_dat_povrata=?, zakasnina=? WHERE id_posudbe=?";
-					Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
+					Statement stmt=con.createStatement();
 					ResultSet rs=stmt.executeQuery(upit);
-					while (rs.next()) {
-						
-						//preuzimanje podatka iz baze
-						int id_posudbe=rs.getInt(1);
-						int id_clan=rs.getInt(2);
-						int id_knjiga=rs.getInt(3);
-						int sifra_knjiznicar=rs.getInt(4);
-						Date datum_posudbe=rs.getDate(5);
-						Date datum_povrata=rs.getDate(6);
-						Date stvarni_dat_povrata=rs.getDate(7);
-						float zakasnina=rs.getFloat(8);
-						
-						//stavljanje podatka u tablicu
-						model.addRow(new Object[] {id_posudbe, id_clan ,id_knjiga, sifra_knjiznicar, datum_posudbe, datum_povrata, stvarni_dat_povrata, zakasnina});
-					}
 					
+					
+					while(rs.next()) {
+
+						int id_posudbe=rs.getInt(1); 
+						String naziv_knjige=rs.getString(2);
+						String ime_autora=rs.getString(3);
+						String prezime_autora=rs.getString(4);
+						String prezime_clana=rs.getString(5);
+						int id_clana=rs.getInt(6);
+						String datum_posudbe=rs.getString(7);
+						String stvarni_dat_povrata=rs.getString(8);
+						float zakasnina=rs.getFloat(9);
+						int sifra_knjiznicar=rs.getInt(10);
+						
+						model.addRow(new Object[] {id_posudbe, naziv_knjige, ime_autora, prezime_autora, prezime_clana, id_clana, datum_posudbe, stvarni_dat_povrata, zakasnina, sifra_knjiznicar});
+						
+					} //while
 					
 				}//try
-				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "tablica");
-				}//catch
+				
+				catch(Exception e1)
+				{
+					JOptionPane.showMessageDialog(null, e1);
+				}
 		
 			} //public void
 		}); //action listener
 		
-		btnNewButton_2.setBounds(699, 449, 95, 45);
+		btnNewButton_2.setBounds(34, 484, 95, 45);
 		frame.getContentPane().add(btnNewButton_2);
 		
 		
@@ -316,6 +342,75 @@ public class Pregled_posudba {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(414, 37, 225, 31);
 		frame.getContentPane().add(lblNewLabel_1);
+		
+		TXT_stv_dat_povrata = new JTextField();
+		TXT_stv_dat_povrata.setBounds(571, 446, 96, 19);
+		frame.getContentPane().add(TXT_stv_dat_povrata);
+		TXT_stv_dat_povrata.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Stvarni datum povrata:");
+		lblNewLabel.setBounds(414, 449, 147, 13);
+		frame.getContentPane().add(lblNewLabel);
+		
+		
+		
+		tablica.addMouseListener(new MouseAdapter()
+		{
+			public void mouseClicked(MouseEvent e)
+			{
+				odabraniRedak=tablica.getSelectedRow(); //da znamo koji redak je odaberen
+				
+				//popunjavamo textfieldove sa podacima iz tablice iz dizajna
+				TXT_stv_dat_povrata.setText(tablica.getValueAt(odabraniRedak, 7).toString()); 
+				id_odabrane_posudbe=(int)tablica.getValueAt(odabraniRedak, 0);
+				System.out.println(id_odabrane_posudbe);
+				
+				//pozivanje podatka o id-ju za ažuriranje
+				//parsiramo u int jer je u sql bazi taj tip podatka
+				//stv_dat_povratas=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
+			
+			}//public void
+		
+		}); //mouseAdapter zagrada
+	
+		 
+		
+		
+		
+		////////////////////////////////////////////////////// mijenjanje datuma povrata////////////////////////////////////////////////
+		JButton btnNewButton_4 = new JButton("Spremi promjene");
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String stv_dat=TXT_stv_dat_povrata.getText();
+				//int id_odabrane_posudbe=(int)tablica.getValueAt(odabraniRedak, 1);
+				//System.out.println(id_odabrane_posudbe);
+				
+				
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					
+					String insert="UPDATE RWAposudba SET zz_dat_povrata_string='"+stv_dat+"' WHERE id_posudbe='"+id_odabrane_posudbe+"';" ;
+					PreparedStatement psInsertDatum=con.prepareStatement(insert); 
+					
+					int redakaUbaceno=psInsertDatum.executeUpdate();
+					if (redakaUbaceno==1) {
+						JOptionPane.showMessageDialog(null, "Promjena spremljena");
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Doslo je do greške. Pokušajte ponovo.");
+					}
+				}//try
+				catch(Exception e1) {
+					JOptionPane.showMessageDialog(null, "Došlo je do greške na bazi.");
+					System.out.println(e1);
+				}//catch
+				
+			}//actionPerformed
+		});//actionListener
+		btnNewButton_4.setBounds(549, 484, 138, 45);
+		frame.getContentPane().add(btnNewButton_4);
 
 		
 	} //private void initialize
@@ -324,6 +419,4 @@ public class Pregled_posudba {
 		frame.setVisible(true);
 		
 	}//public void showWindow
-
-
 }
