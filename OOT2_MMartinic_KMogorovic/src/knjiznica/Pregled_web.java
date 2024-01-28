@@ -79,7 +79,7 @@ public class Pregled_web {
 			new Object[][] {
 			},
 			new String[] {
-				"id", "email", "upit", "datum"
+				"email", "upit", "datum"	
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -102,13 +102,11 @@ public class Pregled_web {
 			
 			while(rs.next()) {
 
-				int id=rs.getInt(1); 
 				String email=rs.getString(2);
 				String upit=rs.getString(3);
 				Date datum=rs.getDate(4);
 				
-				
-				model.addRow(new Object[] {id, email, upit, datum});
+				model.addRow(new Object[] { email, upit, datum});
 				
 			} //while
 			
@@ -116,7 +114,7 @@ public class Pregled_web {
 		
 		catch(Exception e1)
 		{
-			JOptionPane.showMessageDialog(null, e1);
+			JOptionPane.showMessageDialog(null, "Greška pri dohvatu podataka");
 		}
 		
 		////////////////////////////////////////////////////////////////*TRAŽILICA*////////////////////////////////////////////
@@ -136,7 +134,7 @@ public class Pregled_web {
 					String upit1="SELECT * FROM RWAkontakt WHERE email LIKE ? OR upit LIKE ? OR datum LIKE ?";
 					
 					PreparedStatement ps=con.prepareStatement(upit1);
-					ps.setString(1, "%"+pretragas+"%");
+					ps.setString(1, "%"+pretragas+"%"); //1. ?
 					ps.setString(2, "%"+pretragas+"%");
 					ps.setString(3,"%"+pretragas+"%");
 					
@@ -147,20 +145,18 @@ public class Pregled_web {
 					
 					while(rs.next()) {
 
-						int id=rs.getInt(1); 
 						String email=rs.getString(2);
 						String upit=rs.getString(3);
 						Date datum=rs.getDate(4);
 						
-						
-						model.addRow(new Object[] {id, email, upit, datum});
+						model.addRow(new Object[] { email, upit, datum});
 						
 					} //while
 					
 				} //try
 				catch(Exception e1)
 				{
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Traženje podataka nije omogućeno");
 				}//catch
 				
 				

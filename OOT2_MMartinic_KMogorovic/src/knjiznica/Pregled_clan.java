@@ -24,6 +24,7 @@ import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.JPasswordField;
 
 public class Pregled_clan {
 
@@ -32,6 +33,14 @@ public class Pregled_clan {
 	private JTextField trazilica;
 	
 	private int id_clanUpdate; //za izvršavanje ažuriranja
+	
+	private JTextField ime;
+	private JTextField prezime;
+	private JTextField kontakt;
+	private JTextField adresa;
+	private JTextField clanarina;
+	private JTextField datum_upisa;
+	private JTextField datum_isteka;
 
 	/**
 	 * Launch the application.
@@ -61,7 +70,7 @@ public class Pregled_clan {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1379, 533);
+		frame.setBounds(100, 100, 1379, 695);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -75,11 +84,11 @@ public class Pregled_clan {
 			new Object[][] {
 			},
 			new String[] {
-				"id_clan", "ime", "prezime", "kontakt", "adresa", "lozinka", "clanarina", "datum_upisa", "datum_isteka"
+				 "id_clan","ime", "prezime", "kontakt", "adresa", "clanarina",  "datum_isteka","datum_upisa"
 			}
 		){
 			boolean[] columnEditables = new boolean[] {
-					false, false, false, false, false, false, false, false, false
+					false, false, false, false, false, false, false, false
 				};
 				public boolean isCellEditable(int row, int column) {
 					return columnEditables[column];
@@ -90,6 +99,7 @@ public class Pregled_clan {
 			{
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+				
 				String upit="SELECT * FROM RWAclan";
 				Statement stmt=con.createStatement();
 				ResultSet rs=stmt.executeQuery(upit);
@@ -98,17 +108,17 @@ public class Pregled_clan {
 				
 				while(rs.next()) {
 
-					int id_clan=rs.getInt(1); 
+					int id_clan=rs.getInt(1); //po tablici u bazi brojevi
 					String ime=rs.getString(2);
 					String prezime=rs.getString(3);
 					String kontakt=rs.getString(4);
 					String adresa=rs.getString(5);
-					String lozinka=rs.getString(6);
-					String clanarina=rs.getString(7);
-					Date datum_upisa=rs.getDate(8);
-					Date datum_isteka=rs.getDate(9);
 					
-					model.addRow(new Object[] {id_clan, ime, prezime,kontakt, adresa, lozinka, clanarina, datum_upisa, datum_isteka});
+					String clanarina=rs.getString(7);
+					Date datum_isteka=rs.getDate(9);
+					String datum_upisa_string=rs.getString(10);
+					
+					model.addRow(new Object[] {  id_clan, ime, prezime,kontakt, adresa, clanarina, datum_isteka, datum_upisa_string});
 					
 				} //while
 				
@@ -133,7 +143,7 @@ public class Pregled_clan {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 					
-					String upit="SELECT * FROM RWAclan WHERE ime LIKE ? OR prezime LIKE ? OR kontakt LIKE ? OR adresa LIKE ? OR lozinka LIKE ? OR clanarina LIKE ? OR datum_upisa LIKE ? OR datum_isteka LIKE ?";
+					String upit="SELECT * FROM RWAclan WHERE ime LIKE ? OR prezime LIKE ? OR kontakt LIKE ? OR adresa LIKE ? OR clanarina LIKE ? OR  datum_isteka LIKE ?  OR datum_upisa LIKE ? ";
 					
 					PreparedStatement ps=con.prepareStatement(upit);
 					ps.setString(1, "%"+pretragas+"%");
@@ -143,33 +153,34 @@ public class Pregled_clan {
 					ps.setString(5, "%"+pretragas+"%");
 					ps.setString(6, "%"+pretragas+"%");
 					ps.setString(7, "%"+pretragas+"%");
-					ps.setString(8, "%"+pretragas+"%");
 					
 					ResultSet rs=ps.executeQuery();
 					
 					DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+					
 					model.setRowCount(0);
 					
-					while(rs.next()) 
+					while(rs.next()) //prema brojevima u bazi
 					{
 						int id_clan=rs.getInt(1);
 						String ime=rs.getString(2);
 						String prezime=rs.getString(3);
 						String kontakt=rs.getString(4);
 						String adresa=rs.getString(5);
-						String lozinka=rs.getString(6);
-						String clanarina=rs.getString(7);
-						Date datum_upisa=rs.getDate(8);
-						Date datum_isteka=rs.getDate(9);
 						
-						model.addRow(new Object[] {id_clan, ime, prezime,kontakt, adresa, lozinka, clanarina, datum_upisa, datum_isteka});
+						String clanarina=rs.getString(7);
+					
+						Date datum_isteka=rs.getDate(9);
+						String datum_upisa_string=rs.getString(10);
+						
+						model.addRow(new Object[] {id_clan, ime, prezime,kontakt, adresa, clanarina, datum_isteka, datum_upisa_string});
 						
 					} //while
 					
 				} //try
 				catch(Exception e1) 
 				{
-					JOptionPane.showMessageDialog(null,e1);
+					JOptionPane.showMessageDialog(null, "Greška pri pretaživanju!");
 				} //catch
 				
 				
@@ -185,7 +196,7 @@ public class Pregled_clan {
 		trazilica.setColumns(10);
 		
 		
-		//////////////////////////////*UNOS NOVOG ČLANA*////////////////////////////////////////////////
+		//////////////////////////////*PROZOR UNOS NOVOG ČLANA*////////////////////////////////////////////////
 		
 		
 		JButton btnNewButton = new JButton("Unesi novog člana");
@@ -214,6 +225,7 @@ public class Pregled_clan {
 			public void actionPerformed(ActionEvent e) {
 			
 				DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+				
 				int odabraniRedak=tablica.getSelectedRow();
 				
 				if(odabraniRedak >=0) {
@@ -236,7 +248,7 @@ public class Pregled_clan {
 							DefaultTableModel model1=(DefaultTableModel)tablica.getModel();
 							model1.removeRow(odabraniRedak);
 							
-							JOptionPane.showMessageDialog(null, "Član je uspjšeno izbrisan!");
+							JOptionPane.showMessageDialog(null, "Član je uspješno izbrisan!");
 						} //if
 						else 
 						{
@@ -246,7 +258,7 @@ public class Pregled_clan {
 					}//try
 					catch(Exception e1) 
 					{
-						JOptionPane.showMessageDialog(null, e1);
+						JOptionPane.showMessageDialog(null, "Greška pri brisanju!");
 					} //catch
 				
 				} //if glavni
@@ -259,10 +271,106 @@ public class Pregled_clan {
 			
 		});//action listener
 		
-		btnNewButton_1.setBounds(485, 405, 95, 42);
+		btnNewButton_1.setBounds(218, 580, 95, 42);
 		frame.getContentPane().add(btnNewButton_1);
 		
-		///////////////////////////////////////////////////////*AŽURIRANJE PODATAKA*//////////////////////////////////////////////
+///////////////////////////////////////////////////////*AŽURIRANJE PODATAKA*//////////////////////////////////////////////
+		
+////////////////UNOS PODATAKA U TEXTFIELD-OVE////////////////
+		
+		JLabel lblNewLabel = new JLabel("Ime:");
+		lblNewLabel.setBounds(41, 426, 45, 13);
+		frame.getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Prezime:");
+		lblNewLabel_2.setBounds(218, 426, 56, 13);
+		frame.getContentPane().add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Kontakt:");
+		lblNewLabel_3.setBounds(474, 426, 57, 13);
+		frame.getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Adresa:");
+		lblNewLabel_4.setBounds(742, 426, 67, 13);
+		frame.getContentPane().add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_7 = new JLabel("Clanarina:");
+		lblNewLabel_7.setBounds(41, 488, 95, 13);
+		frame.getContentPane().add(lblNewLabel_7);
+		
+		JLabel lblNewLabel_8 = new JLabel("Datum upisa:");
+		lblNewLabel_8.setBounds(238, 488, 83, 13);
+		frame.getContentPane().add(lblNewLabel_8);
+		
+		JLabel lblNewLabel_9 = new JLabel("Datum isteka:");
+		lblNewLabel_9.setBounds(494, 488, 77, 13);
+		frame.getContentPane().add(lblNewLabel_9);
+		
+		ime = new JTextField();
+		ime.setBounds(82, 423, 116, 19);
+		frame.getContentPane().add(ime);
+		ime.setColumns(10);
+		
+		prezime = new JTextField();
+		prezime.setText("");
+		prezime.setBounds(284, 423, 175, 19);
+		frame.getContentPane().add(prezime);
+		prezime.setColumns(10);
+		
+		kontakt = new JTextField();
+		kontakt.setBounds(541, 423, 167, 19);
+		frame.getContentPane().add(kontakt);
+		kontakt.setColumns(10);
+		
+		adresa = new JTextField();
+		adresa.setBounds(795, 423, 207, 19);
+		frame.getContentPane().add(adresa);
+		adresa.setColumns(10);
+		
+		clanarina = new JTextField();
+		clanarina.setBounds(102, 485, 116, 19);
+		frame.getContentPane().add(clanarina);
+		clanarina.setColumns(10);
+		
+		datum_upisa = new JTextField();
+		datum_upisa.setText("");
+		datum_upisa.setBounds(331, 485, 131, 19);
+		frame.getContentPane().add(datum_upisa);
+		datum_upisa.setColumns(10);
+		
+		datum_isteka = new JTextField();
+		datum_isteka.setBounds(581, 485, 147, 19);
+		frame.getContentPane().add(datum_isteka);
+		datum_isteka.setColumns(10);
+		
+		
+		tablica.addMouseListener(new MouseAdapter() 
+		{
+			public void mouseClicked(MouseEvent e) 
+			{
+				int odabraniRedak=tablica.getSelectedRow(); //da znamo koji je redak odabran
+				
+				//popunjavamo TextFieldove - počinjemo od 1 jer je 0 id, a njega ne pisemo u textfield
+				//po redoslijedu iz tablice u gui -brojevi stupaca u tablici gui
+				
+				ime.setText(tablica.getValueAt(odabraniRedak, 1).toString()); //1 jer je ime u prven stupcu tablice u gui
+				prezime.setText(tablica.getValueAt(odabraniRedak, 2).toString());
+				kontakt.setText(tablica.getValueAt(odabraniRedak, 3).toString());
+				adresa.setText(tablica.getValueAt(odabraniRedak, 4).toString());
+				
+				
+				clanarina.setText(tablica.getValueAt(odabraniRedak, 6).toString());
+				datum_upisa.setText(tablica.getValueAt(odabraniRedak, 8).toString());
+				datum_isteka.setText(tablica.getValueAt(odabraniRedak, 7).toString());
+			
+
+				//parsiramo u int jer je idclan tip int u sql bazi
+				id_clanUpdate=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
+			} //public void zagrada
+			
+		  } //mouse adapter zagrada
+				
+		); //tablica.addMouseListener zagrada
 		
 		
 	
@@ -270,39 +378,90 @@ public class Pregled_clan {
 		btnNewButton_2.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 	
-			//ispis u tablicu
-			DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+			// 1. preuzimanje podataka od korisnika iz textField
 			
+			String imes=ime.getText();
+			String prezimes=prezime.getText();
+			String kontakts=kontakt.getText();
+			String adresas=adresa.getText();
+
+			String clanarinas=clanarina.getText();
+			String datum_upisas=datum_upisa.getText();
+			String datum_istekas=datum_isteka.getText();
+			
+			// 2. kreiranje update upita za bazu
 			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 				
-				model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
+				String upit = "UPDATE RWAclan SET  ime=?, prezime=?, kontakt=?, adresa=?, lozinka=?, clanarina=?, datum_isteka=?,datum_upisa_string=?, email=? WHERE id_clan=?";
+				PreparedStatement ps=con.prepareStatement(upit);
 				
-				
-				String upit="UPDATE RWAclan SET id_clan=?, ime=?, prezime=?, kontakt=?, adresa=?, lozinka=?, clanarina=?, datum_upisa=?, datum_isteka=? WHERE id_clan=?";
-				Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
-				ResultSet rs=stmt.executeQuery(upit);
-				while (rs.next()) {
-					
-					//preuzimanje podatka iz baze
-					int id_clan=rs.getInt(1);
-					String ime=rs.getString(2);
-					String prezime=rs.getString(3);
-					String kontakt=rs.getString(4);
-					String adresa=rs.getString(5);
-					String lozinka=rs.getString(6);
-					String clanarina=rs.getString(7);
-					Date datum_upisa=rs.getDate(8);
-					Date datum_isteka=rs.getDate(9); 
+				ps.setString(1, imes); //1 jer gledamo ? u upitu
+				ps.setString(2, prezimes); //na misto drugeg ? dodaj vrijednost koju je korisnik unija u textField-u za prezime
+				ps.setString(3, kontakts);
+				ps.setString(4, adresas);
 			
-					//stavljanje podatka u tablicu
-					model.addRow(new Object[] {id_clan, ime, prezime, kontakt, adresa, lozinka, clanarina, datum_upisa, datum_isteka});
-				}
+				ps.setString(6, clanarinas);
+				
+				ps.setString(7, datum_istekas);
+				ps.setString(8, datum_upisas);
+				
+
+				//dodajemo kako bi iz upita zna za koji id --> id iz odabraneg retka
+				ps.setInt(10, id_clanUpdate); //deseti ?
+				
+				//izvršavanje upita
+				int updateRedak=ps.executeUpdate();
+				
+				//obavjest korisnicima
+				if(updateRedak > 0) 
+				{
+					JOptionPane.showMessageDialog(null, "Uspješno ažuriranje!");
+					
+					//ako je uspješno ažurirano u bazi da tablica prikaže ažurirane podatke
+					
+					try {
+					
+						String upit1="SELECT * FROM RWAclan";
+						Statement stmt=con.createStatement();
+						ResultSet rs=stmt.executeQuery(upit1);
+						
+						DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+						
+						model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
+						
+						while(rs.next()) {
+
+							int id_clan=rs.getInt(1); //po tablici u bazi brojevi
+							String ime=rs.getString(2);
+							String prezime=rs.getString(3);
+							String kontakt=rs.getString(4);
+							String adresa=rs.getString(5);
+							
+							String clanarina=rs.getString(7);
+							Date datum_isteka=rs.getDate(9);
+							String datum_upisa_string=rs.getString(10);
+							
+							model.addRow(new Object[] {  id_clan, ime, prezime,kontakt, adresa, clanarina, datum_isteka, datum_upisa_string});
+							
+						} //while 
+						
+				
+					}//try
+					catch(Exception e2) {
+						JOptionPane.showMessageDialog(null, "Greška u dohvatu podataka ");
+					} //catch
+					
+				} //if
+				else 
+				{
+					JOptionPane.showMessageDialog(null, "Neuspješno ažuriranje!");
+				}//else
+				
 			}//try
-			catch (Exception e1) 
-			{
+			catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, e1);
 			}//catch
 			
@@ -311,7 +470,7 @@ public class Pregled_clan {
 			});//action listener
 			
 		
-		btnNewButton_2.setBounds(645, 405, 95, 42);
+		btnNewButton_2.setBounds(66, 580, 95, 42);
 		frame.getContentPane().add(btnNewButton_2);
 		
 		
@@ -322,14 +481,11 @@ public class Pregled_clan {
 		lblNewLabel_1.setBounds(417, 34, 239, 30);
 		frame.getContentPane().add(lblNewLabel_1);
 		
-		
-	
+
 	
 	}//public void inicialize
 	
 	public void showWindow() {
 		frame.setVisible(true);
 	}//public void showWindow
-
-
 }

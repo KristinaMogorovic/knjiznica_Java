@@ -17,5 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Korisnik/Documents/GitHub/knjiznica_Java/OOT2_MMartinic_KMogorovic/mysql-connector-java-8.0.12.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Korisnik/Documents/GitHub/knjiznica_Java/OOT2_MMartinic_KMogorovic/bcrypt-0.10.2-javadoc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

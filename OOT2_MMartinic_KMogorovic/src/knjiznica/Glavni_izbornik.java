@@ -65,7 +65,7 @@ public class Glavni_izbornik {
 					uc.showWindow();
 				}
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Greška pri otvaranju prozora za unos člana");
 				}//catch
 			}
 		});

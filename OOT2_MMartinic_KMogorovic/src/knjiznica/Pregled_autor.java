@@ -58,7 +58,7 @@ public class Pregled_autor {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 881, 548);
+		frame.setBounds(100, 100, 922, 548);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -85,7 +85,7 @@ public class Pregled_autor {
 				return columnEditables[column];
 			}
 		});
-		
+		//////////////////////////////////////////////////////PRIKAZ PODATAKA//////////////////////////////
 		try
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -110,19 +110,19 @@ public class Pregled_autor {
 		
 		catch(Exception e1)
 		{
-			JOptionPane.showMessageDialog(null, e1);
+			JOptionPane.showMessageDialog(null, "Greška pri dohvatu podataka");
 		}//catch
 		
 		
-		/////////////////////////////////////////////*UNOS NOVOG AUTORA*/////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////*PROZOR UNOS NOVOG AUTORA*/////////////////////////////////////////////////////////////
 		
 		
 		JButton btnNewButton = new JButton("Unesi novog autora");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//prozor unos knjige jer se na njemu nalazi dodavanje autora
-				Unos_knjiga uk = new Unos_knjiga();
-				uk.showWindow();
+				//prozor unos autora
+				Unos_autor ua = new Unos_autor();
+				ua.showWindow();
 			
 			}//public void
 		}); //action listener
@@ -159,7 +159,7 @@ public class Pregled_autor {
 					
 					model.setRowCount(0);
 					
-					while(rs.next()) {
+					while(rs.next()) { //dok ima podataka
 
 						int id_autor=rs.getInt(1); 
 						String ime=rs.getString(2);
@@ -172,7 +172,7 @@ public class Pregled_autor {
 				} //try
 				catch(Exception e1) 
 				{
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Traženje podataka nije omogućeno");
 				} //catch
 				
 			} //public void
@@ -200,10 +200,11 @@ public class Pregled_autor {
 				DefaultTableModel model=(DefaultTableModel)tablica.getModel();
 				int odabraniRedak=tablica.getSelectedRow();
 				
-				if(odabraniRedak >= 0) { //je li odabran NE KOJI
+				if(odabraniRedak >= 0) { //je li odabran redak NE KOJI
 					try {
 						
 						int id_autor=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
+						
 						Class.forName("com.mysql.cj.jdbc.Driver");
 						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 						
@@ -230,7 +231,7 @@ public class Pregled_autor {
 					}//try
 					catch(Exception e1) 
 					{
-						JOptionPane.showMessageDialog(null, e1);
+						JOptionPane.showMessageDialog(null, "Nije moguće izvršiti brisanje");
 					} //catch
 					
 				} //if prvi
@@ -252,14 +253,22 @@ public class Pregled_autor {
 				////////////////UNOS PODATAKA U TEXTFIELD-OVE////////////////
 		
 		ime = new JTextField();
-		ime.setBounds(672, 231, 152, 19);
+		ime.setBounds(707, 231, 152, 19);
 		frame.getContentPane().add(ime);
 		ime.setColumns(10);
 		
 		prezime = new JTextField();
-		prezime.setBounds(672, 294, 152, 19);
+		prezime.setBounds(707, 294, 152, 19);
 		frame.getContentPane().add(prezime);
 		prezime.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Ime:");
+		lblNewLabel.setBounds(652, 234, 45, 13);
+		frame.getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_2 = new JLabel("Prezime:");
+		lblNewLabel_2.setBounds(638, 297, 74, 13);
+		frame.getContentPane().add(lblNewLabel_2);
 		
 		tablica.addMouseListener(new MouseAdapter() 
 		{
@@ -325,7 +334,7 @@ public class Pregled_autor {
 						
 						model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
 						
-						while(rs.next()) {
+						while(rs.next()) { //baza
 
 							int id_autor=rs.getInt(1); 
 							String ime=rs.getString(2);
@@ -343,7 +352,7 @@ public class Pregled_autor {
 					
 				}//try
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "tablica");
+					JOptionPane.showMessageDialog(null, "Nije moguće izvšiti ažuriranje!");
 				}//catch
 			
 			}//public void action event
@@ -359,7 +368,8 @@ public class Pregled_autor {
 		lblNewLabel_1.setBounds(354, 38, 210, 27);
 		frame.getContentPane().add(lblNewLabel_1);
 
-	
+		
+		
 	}//private void initialize
 	
 	public void showWindow() {

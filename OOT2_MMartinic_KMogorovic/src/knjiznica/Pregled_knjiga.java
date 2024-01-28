@@ -32,6 +32,7 @@ public class Pregled_knjiga {
 	private JTextField trazilica;
 	
 	private int id_knjigaUpdate; //za izvršavanje ažuriranja
+	private JTextField brPrimjeraka;
 
 	/**
 	 * Launch the application.
@@ -61,14 +62,14 @@ public class Pregled_knjiga {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 963, 583);
+		frame.setBounds(100, 100, 1039, 629);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 	
 		//////////////////////////////////////////////////*PRIKAZ PODATAKA*////////////////////////////////////
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(40, 173, 880, 226);
+		scrollPane.setBounds(40, 173, 975, 226);
 		frame.getContentPane().add(scrollPane);
 		
 		tablica = new JTable();
@@ -77,11 +78,12 @@ public class Pregled_knjiga {
 			new Object[][] {
 			},
 			new String[] {
-				"id_knjiga", "naziv", "godina_izdanja", "ISBN", "nakladnik", "opis", "jezik", "id_KlasOznake", "slika", "ukupan_broj", "rezervirani", "posudeni"
+				"id_knjiga", "naziv", "ISBN", "nakladnik", "Odjeljak", "ime autora","prezime autora",  "ukupan_broj", "rezervirani", "posudeni"
+					
 			}
 		){
 			boolean[] columnEditables = new boolean[] {
-					false, false, false, false, false, false, false, false, false, false, false, false
+					false, false, false, false, false, false, false, false, false, false
 				};
 				public boolean isCellEditable(int row, int column) {
 					return columnEditables[column];
@@ -92,7 +94,14 @@ public class Pregled_knjiga {
 			{
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
-				String upit="SELECT * FROM RWAknjiga";
+				
+				
+				String upit="SELECT k.id_knjiga, k.naziv AS naziv_knjige, k.isbn, k.nakladnik, kl.odjeljak, a.ime AS ime_autora, a.prezime AS prezime_autora,k.ukupan_broj,k.rezervirani, k.posudeni\r\n"
+						+ "FROM RWAknjiga k\r\n"
+						+ "INNER JOIN RWAklasifikacijska_oznaka kl ON kl.id_KlasOznake=k.id_KlasOznake\r\n"
+						+ "INNER JOIN RWAautor_knjiga ak ON ak.id_knjiga=k.id_knjiga\r\n"
+						+ "INNER JOIN RWAautor a ON ak.id_autor=a.id_autor;";
+				
 				Statement stmt=con.createStatement();
 				ResultSet rs=stmt.executeQuery(upit);
 				
@@ -100,20 +109,21 @@ public class Pregled_knjiga {
 				
 				while(rs.next()) {
 
-					int id_knjiga=rs.getInt(1); 
-					String naziv=rs.getString(2);
-					int godina_izdanja=rs.getInt(3);
-					String ISBN=rs.getString(4);
-					String nakladnik=rs.getString(5);
-					String opis=rs.getString(6);
-					String jezik=rs.getString(7);
-					int id_klasOznake=rs.getInt(8);
-					String slika=rs.getString(9);
-					int ukupan_broj=rs.getInt(11);
-					int rezervirani=rs.getInt(12);
-					int posudeni=rs.getInt(13);
+					//
+					int id_knjiga=rs.getInt(1);  //1. indeks kreirane tablice rezultata upita -->1. stupac kreirane tablice je 1. indeks
+					String naziv_knjige=rs.getString(2);
+					String isbn=rs.getString(3);
+					String nakladnik=rs.getString(4);
+					String odjeljak=rs.getString(5);
+					String ime_autora=rs.getString(6);
+					String prezime_autora=rs.getString(7);
+					int ukupan_broj=rs.getInt(8);
+					int rezervirani=rs.getInt(9);
+					int posudeni=rs.getInt(10);
 					
-					model.addRow(new Object[] {id_knjiga, naziv, godina_izdanja, ISBN, nakladnik, opis, jezik, id_klasOznake, slika, ukupan_broj, rezervirani, posudeni});
+					
+					model.addRow(new Object[] {id_knjiga, naziv_knjige, isbn, nakladnik, odjeljak, ime_autora, prezime_autora, ukupan_broj, rezervirani, posudeni});
+					
 					
 				} //while
 				
@@ -121,7 +131,7 @@ public class Pregled_knjiga {
 			
 			catch(Exception e1)
 			{
-				JOptionPane.showMessageDialog(null, e1);
+				JOptionPane.showMessageDialog(null, "Greška u dohvatu podataka!");
 			}
 		///////////////////////////////////////////////////////////*TRAŽILICA*/////////////////////////////////////////////////
 		trazilica = new JTextField();
@@ -137,9 +147,30 @@ public class Pregled_knjiga {
 						Class.forName("com.mysql.cj.jdbc.Driver");
 						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 						
-						String upit="SELECT * FROM RWAknjiga WHERE naziv LIKE ? OR godina_izdanja LIKE ? OR isbn LIKE ? OR nakladnik LIKE ? OR opis LIKE ? OR jezik LIKE ? OR id_KlasOznake LIKE ? OR slika LIKE ? OR ukupan_broj LIKE ? OR rezervirani LIKE ? OR posudeni LIKE ?";
+								String upit1="SELECT *\r\n"
+								+ "FROM (\r\n"
+								+ "SELECT k.id_knjiga, k.naziv AS naziv_knjige,  k.isbn, k.nakladnik, kl.odjeljak, a.ime AS ime_autora, a.prezime AS prezime_autora, k.ukupan_broj, k.rezervirani, k.posudeni\r\n"
+								+ "FROM RWAknjiga k\r\n"
+								+ "INNER JOIN RWAklasifikacijska_oznaka kl ON kl.id_KlasOznake=k.id_KlasOznake \r\n"
+								+ "INNER JOIN RWAautor_knjiga ak ON ak.id_knjiga=k.id_knjiga \r\n"
+								+ "INNER JOIN RWAautor a ON ak.id_autor=a.id_autor\r\n"
+								+ ") AS tmp \r\n"
+								+ "WHERE \r\n"
+								+ "tmp.naziv_knjige LIKE ? OR\r\n"
+								+ "tmp.isbn LIKE ? OR\r\n"
+								+ "tmp.nakladnik LIKE ? OR\r\n"
+								+ "tmp.odjeljak LIKE ? OR\r\n"
+								+ "tmp.ime_autora LIKE ? OR\r\n"
+								+ "tmp.prezime_autora LIKE ? OR\r\n"
+								+ "tmp.ukupan_broj LIKE ? OR\r\n"
+								+ "tmp.rezervirani LIKE ? OR\r\n"
+								+ "tmp.posudeni LIKE ? \r\n"
+								+"	;\r\n"
+								+"";
+								
+								
 						
-						PreparedStatement ps=con.prepareStatement(upit);
+						PreparedStatement ps=con.prepareStatement(upit1);
 						ps.setString(1, "%"+pretragas+"%"); 
 						ps.setString(2, "%"+pretragas+"%");
 						ps.setString(3, "%"+pretragas+"%");
@@ -149,30 +180,34 @@ public class Pregled_knjiga {
 						ps.setString(7, "%"+pretragas+"%");
 						ps.setString(8, "%"+pretragas+"%");
 						ps.setString(9, "%"+pretragas+"%");
-						ps.setString(10, "%"+pretragas+"%");
-						ps.setString(11, "%"+pretragas+"%");
+					//	ps.setString(10, "%"+pretragas+"%");
+						
 						
 						ResultSet rs=ps.executeQuery();
 						
 						DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+						
 						model.setRowCount(0);
 						
-						while(rs.next()) {
+						
+						//od gore while za pretragu:
+						while(rs.next()) { // po bazi
 
-							int id_knjiga=rs.getInt(1); 
-							String naziv=rs.getString(2);
-							int godina_izdanja=rs.getInt(3);
-							String ISBN=rs.getString(4);
-							String nakladnik=rs.getString(5);
-							String opis=rs.getString(6);
-							String jezik=rs.getString(7);
-							int id_klasOznake=rs.getInt(8);
-							String slika=rs.getString(9);
-							int ukupan_broj=rs.getInt(10);
-							int rezervirani=rs.getInt(11);
-							int posudeni=rs.getInt(12);
+							//
+							int id_knjiga=rs.getInt(1);  //1. indeks kreirane tablice rezultata upita -->1. stupac kreirane tablice je 1. indeks
+							String naziv_knjige=rs.getString(2);
+							String isbn=rs.getString(3);
+							String nakladnik=rs.getString(4);
+							String odjeljak=rs.getString(5);
+							String ime_autora=rs.getString(6);
+							String prezime_autora=rs.getString(7);
+							int ukupan_broj=rs.getInt(8);
+							int rezervirani=rs.getInt(9);
+							int posudeni=rs.getInt(10);
 							
-							model.addRow(new Object[] {id_knjiga, naziv, godina_izdanja, ISBN, nakladnik, opis, jezik, id_klasOznake, slika, ukupan_broj, rezervirani, posudeni});
+							
+							model.addRow(new Object[] {id_knjiga, naziv_knjige, isbn, nakladnik, odjeljak, ime_autora, prezime_autora, ukupan_broj, rezervirani, posudeni});
+							
 							
 						} //while
 						
@@ -217,27 +252,39 @@ public class Pregled_knjiga {
 			public void actionPerformed(ActionEvent e) {
 			
 				DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+				
 				int odabraniRedak=tablica.getSelectedRow();
 				
-				if(odabraniRedak >=0) {
+				if(odabraniRedak >=0) { //ako je odabran neki redak
 					
 					try {
 						
-						int id_knjiga=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
+						int id_knjiga=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString()); //parsiranje jer je id tip int u heidi
 						
 						Class.forName("com.mysql.cj.jdbc.Driver");
 						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 						
-						String upit="DELETE FROM RWAknjiga WHERE id_knjiga=?";
+						//najprije treba izbrisat podatak child tablice da bi se moga podatak u parent izbrisat
+						
+						String upit="DELETE FROM RWAautor_knjiga WHERE id_knjiga=?";
+						String upit1="DELETE FROM RWAknjiga WHERE id_knjiga=?";
 						
 						PreparedStatement ps=con.prepareStatement(upit);
-						ps.setInt(1, id_knjiga);
+						PreparedStatement ps1=con.prepareStatement(upit1);
+						
+						ps.setInt(1, id_knjiga); //1. upitnik
+						
+						ps1.setInt(1, id_knjiga);
 						
 						int rezultat=ps.executeUpdate();
+						int rezultat1=ps1.executeUpdate();
 						
-						if(rezultat==1) 
+						
+						if(rezultat==1 && rezultat1==1 ) //ako se je upit izvrsia na bazi
+						//if(rezultat1==1)
 						{
 							DefaultTableModel model1=(DefaultTableModel)tablica.getModel();
+							
 							model1.removeRow(odabraniRedak);
 							
 							JOptionPane.showMessageDialog(null, "Knjiga je uspješno izbrisana!");
@@ -250,7 +297,7 @@ public class Pregled_knjiga {
 					} //try
 					catch(Exception e1)
 					{
-						JOptionPane.showMessageDialog(null, e1);
+						JOptionPane.showMessageDialog(null, "Gre");
 					} //catch
 					
 				} //if prvi
@@ -262,60 +309,127 @@ public class Pregled_knjiga {
 			}//public void
 		});//action listener
 		
-		btnNewButton_1.setBounds(567, 425, 95, 45);
+		btnNewButton_1.setBounds(276, 504, 95, 45);
 		frame.getContentPane().add(btnNewButton_1);
 		
 		////////////////////////////////////////////////////////////*AŽURIRAJ PODATKE*/////////////////////////////////////
 		
+													///////UNOS U TEXTFIELD/////////////
+		brPrimjeraka = new JTextField();
+		brPrimjeraka.setBounds(139, 442, 165, 19);
+		frame.getContentPane().add(brPrimjeraka);
+		brPrimjeraka.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Broj primjeraka");
+		lblNewLabel.setBounds(40, 445, 103, 13);
+		frame.getContentPane().add(lblNewLabel);
+		
+		
+		tablica.addMouseListener(new MouseAdapter()
+				
+		{
+			public void mouseClicked(MouseEvent e) 
+			{
+				int odabraniRedak=tablica.getSelectedRow(); //da znamo koji je redak odabran
+				
+				//popunjavamo TextFieldove - počinjemo od 1 jer je 0 id, a njega ne pisemo u textfield
+				
+				brPrimjeraka.setText(tablica.getValueAt(odabraniRedak, 7).toString()); //7 jer je u tablici 7. stupac -->broji se od 0
+				
+				id_knjigaUpdate=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
+			
+			} //public void zagrada
+			
+		  } //mouse adapter zagrada
+				
+		); //tablica.addMouseListener zagrada
+		
+		
+		///////////////////
 		
 		JButton btnNewButton_1_1 = new JButton("Ažuriraj");
 		btnNewButton_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//ispis u tablicu
-				DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+				// 1. preuzimanje podataka od korisnika iz textField
+				String brprimjerkas=brPrimjeraka.getText();
 				
+				// 2. kreiranje update upita za bazu
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 					
-					model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
-					String upit = "SELECT * FROM RWAknjiga";
+					String upit="UPDATE RWAknjiga SET ukupan_broj=? WHERE id_knjiga=?;";
+					PreparedStatement ps=con.prepareStatement(upit);
 					
-				//	String upit="UPDATE RWAknjiga SET id_knjiga=?, naziv=?, godina_izdanja=?, isbn=?, nakladnik=?, opis=?, jezik=?, id_KlasOznake=?, slika=?, ukupni_broj=?, rezervirani=?, posudeni=? WHERE id_knjiga=?";
-					Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
-					ResultSet rs=stmt.executeQuery(upit);
-					while (rs.next()) {
+					ps.setString(1,brprimjerkas); //1. upitnik
+					
+					ps.setInt(2, id_knjigaUpdate); //2. upitnik
+					
+					int updateRedak=ps.executeUpdate();
+					
+					if(updateRedak >0) { //ako je ažurirano u tablici
+						JOptionPane.showMessageDialog(null, "Uspješno ažuriranje!");
 						
-						//preuzimanje podatka iz baze
-						int id_knjiga=rs.getInt(1);
-						String naziv=rs.getString(2);
-						int godina_izdanja=rs.getInt(3);
-						String isbn=rs.getString(4);
-						String nakladnik=rs.getString(5);
-						String opis=rs.getString(6);
-						String jezik=rs.getString(7);
-						int id_KlasOznake=rs.getInt(8);
-						String slika=rs.getString(9);
-						int ukupni_broj=rs.getInt(10);
-						int rezervirani=rs.getInt(11);
-						int posudeni=rs.getInt(12);
-				
-						//stavljanje podatka u tablicu
-						model.addRow(new Object[] {id_knjiga, naziv, godina_izdanja, isbn, nakladnik, opis, jezik, id_KlasOznake, slika, ukupni_broj, rezervirani, posudeni});
-					}
+						try {
+							
+							String upit2="SELECT k.id_knjiga, k.naziv AS naziv_knjige, k.isbn, k.nakladnik, kl.odjeljak, a.ime AS ime_autora, a.prezime AS prezime_autora,k.ukupan_broj,k.rezervirani, k.posudeni\r\n"
+									+ "FROM RWAknjiga k\r\n"
+									+ "INNER JOIN RWAklasifikacijska_oznaka kl ON kl.id_KlasOznake=k.id_KlasOznake\r\n"
+									+ "INNER JOIN RWAautor_knjiga ak ON ak.id_knjiga=k.id_knjiga\r\n"
+									+ "INNER JOIN RWAautor a ON ak.id_autor=a.id_autor;";
+							
+							Statement stmt=con.createStatement();
+							ResultSet rs=stmt.executeQuery(upit2);
+							
+							DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+							
+							model.setRowCount(0);
+							
+							while(rs.next()) {
+
+								//
+								int id_knjiga=rs.getInt(1);  //1. indeks kreirane tablice rezultata upita -->1. stupac kreirane tablice je 1. indeks
+								String naziv_knjige=rs.getString(2);
+								String isbn=rs.getString(3);
+								String nakladnik=rs.getString(4);
+								String odjeljak=rs.getString(5);
+								String ime_autora=rs.getString(6);
+								String prezime_autora=rs.getString(7);
+								int ukupan_broj=rs.getInt(8);
+								int rezervirani=rs.getInt(9);
+								int posudeni=rs.getInt(10);
+								
+								
+								model.addRow(new Object[] {id_knjiga, naziv_knjige, isbn, nakladnik, odjeljak, ime_autora, prezime_autora, ukupan_broj, rezervirani, posudeni});
+								
+								
+							} //while
+							
+						}//try unutarnji
+						catch(Exception e2) {
+							JOptionPane.showMessageDialog(null, "Greška u dohvatu podataka!");
+						}//catch unutarnji
+						
+					}//if
 					
+					else {
+						JOptionPane.showMessageDialog(null, "Ažuriranje neuspješno");
+						
+					}//else
 					
-				}//try
+					}//try 
+					
+
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "tablica");
+					JOptionPane.showMessageDialog(null, "Greška pri ažuriranju");
 				}//catch
 			
 			}//public void
 		});//action listener
 		
-		btnNewButton_1_1.setBounds(702, 425, 95, 45);
+		btnNewButton_1_1.setBounds(96, 504, 95, 45);
 		frame.getContentPane().add(btnNewButton_1_1);
 		
 		
@@ -327,6 +441,7 @@ public class Pregled_knjiga {
 		frame.getContentPane().add(lblNewLabel_1);
 		
 		
+
 	}//public void inicialize
 	
 	public void showWindow() {

@@ -74,6 +74,7 @@ public class Unos_autor {
 		JButton btnNewButton = new JButton("Spremi");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				String imes, prezimes;
 				imes=ime.getText();
 				prezimes=prezime.getText();
@@ -92,12 +93,12 @@ public class Unos_autor {
 						JOptionPane.showMessageDialog(null, "Unos uspješan");
 					}//if
 					else {
-						JOptionPane.showMessageDialog(null, "Greška pri unosu.");
+						JOptionPane.showMessageDialog(null, "Unos neuspješan.");
 					}//else
 					
 				}
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Greška prilikom unosa u bazu!\n Molimo pokušajte ponovno");
 				}
 				
 			}
@@ -109,5 +110,11 @@ public class Unos_autor {
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_2.setBounds(171, 21, 143, 13);
 		frame.getContentPane().add(lblNewLabel_2);
+	}
+
+	public void showWindow() {
+		// TODO Auto-generated method stub
+		frame.setVisible(true);
+		
 	}
 }

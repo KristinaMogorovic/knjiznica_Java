@@ -14,6 +14,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,6 +25,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Statement;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 //unos zaposlenika bla bla bla
 
@@ -37,7 +41,11 @@ public class Unos_zaposlenik {
 	private JTextField adresa;
 	private JPasswordField lozinka;
 	private JPasswordField ponLozinka;
-	private JTable table;
+	private JTable tablica;
+	private JTextField imeUpdate;
+	private JTextField prezimeUpdate;
+	
+	private int sifraKnjiznicaraUpdate;
 
 	/**
 	 * Launch the application.
@@ -67,7 +75,7 @@ public class Unos_zaposlenik {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 765, 571);
+		frame.setBounds(100, 100, 915, 571);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -138,8 +146,8 @@ public class Unos_zaposlenik {
 		scrollPane.setBounds(64, 303, 463, 192);
 		frame.getContentPane().add(scrollPane);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		tablica = new JTable();
+		tablica.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -153,10 +161,10 @@ public class Unos_zaposlenik {
 				return columnEditables[column];
 			}
 		});
-		scrollPane.setViewportView(table);
+		scrollPane.setViewportView(tablica);
 		
 		//ispis u tablicu
-		DefaultTableModel model =(DefaultTableModel) table.getModel(); /////
+		DefaultTableModel model =(DefaultTableModel) tablica.getModel(); /////
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
@@ -231,18 +239,13 @@ public class Unos_zaposlenik {
 					}//if
 					else JOptionPane.showMessageDialog(null, "Lozinke se ne podudaraju");
 					
-					
-					
-					
-					
-					
+
 				}//try
 				catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Greška pri spajanju na server.");
 				}
 				
-				
-				
+
 			}
 		});
 		btnNewButton.setBounds(389, 159, 89, 23);
@@ -257,6 +260,7 @@ public class Unos_zaposlenik {
 		frame.getContentPane().add(ponLozinka);
 		
 		
+	////////////////////////////////////////////////////////////////BRISANJE//////////////////////////////////////////
 		
 		JButton btnNewButton_1 = new JButton("obriši");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -265,13 +269,13 @@ public class Unos_zaposlenik {
 				
 				//znat koji je redak odabran u tablici u dizajnu
 				
-				DefaultTableModel model=(DefaultTableModel)table.getModel();
-				int odabraniRedak=table.getSelectedRow();
+				DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+				int odabraniRedak=tablica.getSelectedRow();
 				
 				if(odabraniRedak >= 0) { //je li odabran NE KOJI
 					try {
 						
-						int sifra=Integer.parseInt(table.getValueAt(odabraniRedak, 0).toString());
+						int sifra=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
 						Class.forName("com.mysql.cj.jdbc.Driver");
 						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 						
@@ -284,21 +288,21 @@ public class Unos_zaposlenik {
 						
 						if(rezultat==1) {
 							
-							DefaultTableModel model1=(DefaultTableModel)table.getModel();
+							DefaultTableModel model1=(DefaultTableModel)tablica.getModel();
 							model1.removeRow(odabraniRedak);
 							
-							JOptionPane.showMessageDialog(null, "Autor je uspješno izbrisan!");
+							JOptionPane.showMessageDialog(null, "Knjižničar je uspješno izbrisan!");
 							
 						} //if drugi
 						else 
 						{
-							JOptionPane.showMessageDialog(null, "Autora nije moguće izbrisati!");
+							JOptionPane.showMessageDialog(null, "Knjižničara nije moguće izbrisati!");
 						} //else drugi
 						
 					}//try
 					catch(Exception e1) 
 					{
-						JOptionPane.showMessageDialog(null, "Zaposlenik je potpisan na posudbi. Nemožete ga izbrisati.");
+						JOptionPane.showMessageDialog(null, "Knjižničar je zapisan na posudbi. Ne možete ga izbrisati.");
 					} //catch
 					
 				} //if prvi
@@ -309,41 +313,130 @@ public class Unos_zaposlenik {
 				
 			}
 		});
-		btnNewButton_1.setBounds(549, 472, 145, 23);
+		btnNewButton_1.setBounds(731, 472, 145, 23);
 		frame.getContentPane().add(btnNewButton_1);
+///////////////////////////////////////////////////////////////////////AŽURIRAJ////////////////////////////////////////////////////////		
 		
-		JButton btnNewButton_2 = new JButton("ažuriraj \r\ntablicu");
+		////////////////////////////////////////////////UNOS PODATAKA U TEXTFIELD////////////////////////
+		
+		imeUpdate = new JTextField();
+		imeUpdate.setColumns(10);
+		imeUpdate.setBounds(605, 350, 127, 20);
+		frame.getContentPane().add(imeUpdate);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("ime");
+		lblNewLabel_1_1.setBounds(549, 353, 46, 14);
+		frame.getContentPane().add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("prezime");
+		lblNewLabel_2_1.setBounds(549, 400, 46, 14);
+		frame.getContentPane().add(lblNewLabel_2_1);
+		
+		prezimeUpdate = new JTextField();
+		prezimeUpdate.setColumns(10);
+		prezimeUpdate.setBounds(605, 397, 127, 20);
+		frame.getContentPane().add(prezimeUpdate);
+		
+		
+		tablica.addMouseListener(new MouseAdapter() 
+		{
+			public void mouseClicked(MouseEvent e) 
+			{
+				int odabraniRedak=tablica.getSelectedRow(); //da znamo koji je redak odabran
+				
+				//popunjavamo TextFieldove - počinjemo od 1 jer je 0 id, a njega ne pisemo u textfield
+				
+				imeUpdate.setText(tablica.getValueAt(odabraniRedak, 1).toString());
+				prezimeUpdate.setText(tablica.getValueAt(odabraniRedak, 2).toString());
+				
+				//vezano uz update donjih kodova
+				
+				sifraKnjiznicaraUpdate=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
+			} //public void zagrada
+			
+		  } //mouse adapter zagrada
+				
+		); //tablica.addMouseListener zagrada
+		
+		
+		
+		
+		JButton btnNewButton_2 = new JButton("ažuriraj \r");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				//ispis u tablicu
-				DefaultTableModel model =(DefaultTableModel) table.getModel(); /////
+// 1. preuzimanje podataka od korisnika iz textField
+				
+				String imes=imeUpdate.getText();
+				String prezimes=prezimeUpdate.getText();
+				
+				// 2. kreiranje update upita za bazu
+				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 					
-					model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
-					String upit = "SELECT sifra_knjiznicar, ime, prezime FROM RWA_knjiznicar";
-					Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
-					ResultSet rs=stmt.executeQuery(upit);
-					while (rs.next()) {
-						//preuzimanje podatka iz baze
-						int sifra=rs.getInt(1);
-						String ime=rs.getString(2);
-						String prezime=rs.getString(3);
+					String upit = "UPDATE RWA_knjiznicar SET  ime=?, prezime=? WHERE sifra_knjiznicar=?";
+					PreparedStatement ps=con.prepareStatement(upit);
+					
+					ps.setString(1, imes); //1 jer gledamo ? u upitu
+					ps.setString(2, prezimes); //na misto drugeg ? dodaj vrijednost koju je korisnik unija u textField-u za prezime
 
-						//stavljanje podatka u tablicu
-						model.addRow(new Object[] {sifra, ime, prezime});
-					}
+					//dodajemo kako bi iz upita zna za koji id --> id iz odabraneg retka
+					ps.setInt(3, sifraKnjiznicaraUpdate);
+					
+					//izvršavanje upita
+					int updateRedak=ps.executeUpdate();
+					
+					//obavjest korisnicima
+					if(updateRedak > 0) 
+					{
+						JOptionPane.showMessageDialog(null, "Uspješno ažuriranje!");
+						
+						//ako je uspješno ažurirano u bazi da tablica prikaže ažurirane podatke
+						
+						String upit1="SELECT * FROM RWA_knjiznicar";
+						Statement stmt=con.createStatement();
+						ResultSet rs=stmt.executeQuery(upit1);
+						
+						DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+						
+						model.setRowCount(0);//svaki put kad stisnemo batun broj redaka se postavlja na 0
+						
+						while(rs.next()) {
+
+							int sifra_knjiznicar=rs.getInt(1); 
+							String ime=rs.getString(2);
+							String prezime=rs.getString(3);
+							
+							model.addRow(new Object[] {sifra_knjiznicar, ime, prezime});
+							
+						} //while
+						
+					} //if
+					else 
+					{
+						JOptionPane.showMessageDialog(null, "Neuspješno ažuriranje!");
+					}//else
+					
 				}//try
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "tablica");
+					JOptionPane.showMessageDialog(null, "Nije moguće izvršiti ažuriranje");
 				}//catch
 				
 			}
 		});
-		btnNewButton_2.setBounds(549, 394, 145, 67);
+		btnNewButton_2.setBounds(550, 472, 145, 23);
 		frame.getContentPane().add(btnNewButton_2);
+		
+		
+		JLabel lblNewLabel_8 = new JLabel("UNOS ZAPOSLENIKA");
+		lblNewLabel_8.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_8.setBounds(345, 10, 212, 23);
+		frame.getContentPane().add(lblNewLabel_8);
+		
+		
 	}
 	
 	public void showWindow() {

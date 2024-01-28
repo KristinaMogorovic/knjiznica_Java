@@ -86,12 +86,11 @@ public class Log_In {
 		JButton btnNewButton = new JButton("LOG IN");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				String sifra_knjiznicars, lozinkas;
 				
 				sifra_knjiznicars = sifra_knjiznicar.getText();
-				lozinkas = new String (lozinka.getPassword());
-				
-				
+				lozinkas = new String (lozinka.getPassword());	
 				
 				try {
 					
@@ -117,10 +116,8 @@ public class Log_In {
 					
 				}//try
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Greška pri spajanju ");
 				}//catch
-				
-				
 				
 			}
 		});

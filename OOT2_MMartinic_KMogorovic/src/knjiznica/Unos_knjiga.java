@@ -63,7 +63,7 @@ public class Unos_knjiga {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 750, 572);
+		frame.setBounds(0, 0, 750, 635);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -147,6 +147,7 @@ public class Unos_knjiga {
 		frame.getContentPane().add(lblNewLabel_1);
 
 ////////////////////////////////////////stavljanje prezimena u combo box///////////////////////////////////////////////////////////
+		
 		JComboBox prezime = new JComboBox();
 		prezime.setBounds(557, 46, 117, 21);
 		frame.getContentPane().add(prezime);
@@ -162,14 +163,16 @@ public class Unos_knjiga {
 			}
 		}//try
 		catch (Exception e1) {
-			JOptionPane.showMessageDialog(null, "Greška pri povlačenju podataka o prezimenu autora.");
+			JOptionPane.showMessageDialog(null, "Greška pri dohvatu podataka o prezimenu autora.");
 		}//catch
 		
 		
 //////////////////////stavljanje imena autora ovisno koje je prezime/////////////////////////////////////////////////////////////////
+		
 		JComboBox ime = new JComboBox();
 		ime.setBounds(557, 97, 117, 21);
 		frame.getContentPane().add(ime);
+		
 		prezime.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
@@ -182,6 +185,7 @@ public class Unos_knjiga {
 		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
 
 		            String upit = "SELECT ime FROM RWAautor WHERE prezime=?";
+		           
 		            PreparedStatement psInsertPrezimeAutora = con.prepareStatement(upit);
 		            psInsertPrezimeAutora.setString(1, odabran_autor);
 
@@ -195,7 +199,7 @@ public class Unos_knjiga {
 		            }
 		        } 
 		        catch (Exception e1) {
-		            JOptionPane.showMessageDialog(null, e1);
+		            JOptionPane.showMessageDialog(null, "Greška pri dohvatu imena autora");
 		        }
 		    }
 		});
@@ -208,16 +212,19 @@ public class Unos_knjiga {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			
 			String upit = "SELECT * FROM RWAklasifikacijska_oznaka";
 			Statement stmt=con.createStatement();
 			ResultSet rs=stmt.executeQuery(upit);
+			
 			while (rs.next()) {
 				String podatak =rs.getString(2);//3. atribut iz tablice
 				odjeljak.addItem(podatak);
-			}
+			}//while
+			
 		}//try
 		catch (Exception e1) {
-			JOptionPane.showMessageDialog(null, "Greška pri povlačenju podataka o odjeljcima.");
+			JOptionPane.showMessageDialog(null, "Greška pri dohvatu podataka o odjeljcima.");
 		}//catch
 		
 		TextArea radnja = new TextArea();
@@ -225,9 +232,11 @@ public class Unos_knjiga {
 		frame.getContentPane().add(radnja);
 		
 /////////////////////////////////////////////////////unos nove knjige/////////////////////////////////////////////////////
+		
 		JButton btnNewButton = new JButton("unesi");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
 				String nazivs, imes, prezimes, godinas, nakladniks, jeziks, odjeljaks, isbns, slikas, radnjas, primjercis;
 				
 				nazivs = naziv.getText();	
@@ -248,17 +257,19 @@ public class Unos_knjiga {
 					
 					//selektiranje id odabrane klasifikacijske oznake - FK
 					String upitOdjeljak="SELECT id_KlasOznake FROM RWAklasifikacijska_oznaka WHERE odjeljak='"+odjeljaks+"'";
-					Statement stmtOdjeljak=con.createStatement(); //priprema upita
-					ResultSet rsOdjeljak=stmtOdjeljak.executeQuery(upitOdjeljak); //izvršavanje upita - rezultat
-					int idOdjeljak=0; //varijabla u koju će se spremit id
-					if(rsOdjeljak.next()) { //čitanje rezultata - treba bit baren jedan
-						idOdjeljak=rsOdjeljak.getInt(1); //spremi taj rezultat u varijablu koja će se pole koristit
+					Statement stmtOdjeljak=con.createStatement();
+					ResultSet rsOdjeljak=stmtOdjeljak.executeQuery(upitOdjeljak);
+					int idOdjeljak=0;
+					
+					if(rsOdjeljak.next()) {
+						idOdjeljak=rsOdjeljak.getInt(1);
 					}
 					System.out.println("idOdjeljak="+idOdjeljak);
 					
 					//unos nove knjige u bazu
 					String upit1="INSERT INTO RWAknjiga VALUES (NULL, ?, ?, ?, ?, ?, ?, ?,?, null,?, NULL ,NULL)";
 					PreparedStatement psInsertKnjiga=con.prepareStatement(upit1); 
+					
 					psInsertKnjiga.setString(1, nazivs);
 					psInsertKnjiga.setString(2, godinas);
 					psInsertKnjiga.setString(3, isbns);
@@ -272,10 +283,10 @@ public class Unos_knjiga {
 					//provjera da je samo jednom ubačena u bazu
 					int redakaUbaceno = psInsertKnjiga.executeUpdate();
 					if (redakaUbaceno==1) {
-						JOptionPane.showMessageDialog(null, "knjiga zapisana u bazu");
+						JOptionPane.showMessageDialog(null, "knjiga je uspješno unesena!");
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "knjiga nije zapisana u bazu");
+						JOptionPane.showMessageDialog(null, "knjiga je neuspješno unesena!");
 					}
 					
 				}
@@ -289,30 +300,33 @@ public class Unos_knjiga {
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 					
 					//selektiranje id autora knjige
+					
 					String upitAutor="SELECT id_autor FROM RWAautor WHERE ime='"+imes+"' AND prezime='"+prezimes+"' ";
 					Statement stmtAutor=con.createStatement();
 					ResultSet rsAutor=stmtAutor.executeQuery(upitAutor);
-					int idAutor=0; //varijabla u koju ce se spremit id autora
+					
+					int idAutor=0;
 					if(rsAutor.next()) {
-						idAutor=rsAutor.getInt(1);//rezultat iz upita spremi u varijablu
+						idAutor=rsAutor.getInt(1);
 					}
-					System.out.println("idAutor="+idAutor); //provjera da vidin ca se je spremilo u varijablu
+					System.out.println("idAutor="+idAutor);
 					
 					//selektiranje id upisane knjige
 					String upitKnjiga="SELECT id_knjiga FROM RWAknjiga WHERE isbn='"+isbns+"' AND naziv='"+nazivs+"'  ";
 					Statement stmtKnjiga=con.createStatement();
 					ResultSet rsKnjiga=stmtKnjiga.executeQuery(upitKnjiga);
+					
 					int idKnjiga=0;
 					if(rsKnjiga.next()) {
-						idKnjiga=rsKnjiga.getInt(1);//rezultat iz upita spremi u varijablu
+						idKnjiga=rsKnjiga.getInt(1);
 					}
-					System.out.println("idKnjiga="+idKnjiga);//provjera da vidin ca se je spremilo u varijablu
+					System.out.println("idKnjiga="+idKnjiga);
 					
 					//upis u agregaciju
 					String upit_agregacija="INSERT INTO RWAautor_knjiga VALUES (?, ?);";
 					PreparedStatement psInsertKnjAut=con.prepareStatement(upit_agregacija);
-					psInsertKnjAut.setInt(1, idKnjiga);//u tablicu se inserta rezultat iz varijable idKnjiga-linija307
-					psInsertKnjAut.setInt(2, idAutor);//u tablicu se inserta rezultat iz varijable idAutor-linija297
+					psInsertKnjAut.setInt(1, idKnjiga);
+					psInsertKnjAut.setInt(2, idAutor);
 					int rsAgregacija=psInsertKnjAut.executeUpdate();
 				}
 				catch (Exception e3) {
@@ -320,19 +334,26 @@ public class Unos_knjiga {
 				}
 				
 				
-			}
-		});
+			} //public void
+		}); //action listener
+		
 		btnNewButton.setBounds(471, 485, 89, 23);
 		frame.getContentPane().add(btnNewButton);
 		
 		
-		
+	///////////////////////////////////////////////////////////////////////PROZOR UNOS NOVOG AUTORA////////////////////////////////////////////	
 		
 		JButton btnNewButton_1 = new JButton("dodaj novog autora");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Unos_autor ua = new Unos_autor();
+				ua.showWindow();
+			} //public void
+		}); //action listener
+		
+		
 		btnNewButton_1.setBounds(471, 151, 145, 23);
 		frame.getContentPane().add(btnNewButton_1);
-		
-		
 		
 	}
 	

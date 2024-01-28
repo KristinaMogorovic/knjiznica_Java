@@ -125,6 +125,8 @@ public class Unos_clan {
 		lozinka.setBounds(78, 325, 93, 19);
 		frame.getContentPane().add(lozinka);
 		
+												////////////CLANARINA COMBOBOX/////////
+		
 		JComboBox clanarina = new JComboBox();
 		clanarina.setBounds(23, 264, 314, 21);
 		frame.getContentPane().add(clanarina);
@@ -148,15 +150,17 @@ public class Unos_clan {
 		}
 		catch(Exception e2)
 		{
-			JOptionPane.showMessageDialog(null, e2);
+			JOptionPane.showMessageDialog(null, "Greška pri dohvatu članarine");
 		}
 		
 		
-		//spremanje podataka
+																		//spremanje podataka
 		JButton btnNewButton = new JButton("Spremi");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				String imes, prezimes, kontakts, adresas, lozinkas, clanarinas, datums;
+				
 				imes=ime.getText();
 				prezimes=prezime.getText();
 				kontakts=kontakt.getText();
@@ -170,6 +174,7 @@ public class Unos_clan {
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 					
 					String unos="INSERT INTO RWAclan (ime, prezime, kontakt, adresa, lozinka, clanarina,datum_upisa_string) VALUES (?,?,?,?,?,?,?);";
+					
 					PreparedStatement psInsert=con.prepareStatement(unos);
 					psInsert.setString(1, imes);
 					psInsert.setString(2, prezimes);
@@ -180,19 +185,17 @@ public class Unos_clan {
 					psInsert.setString(7, datums);
 					
 					int redakaUbaceno = psInsert.executeUpdate();
+					
 					if (redakaUbaceno==1) {
 						JOptionPane.showMessageDialog(null, "Unos uspješan");
 					}//if
 					else {
-						JOptionPane.showMessageDialog(null, "Greška pri unosu.");
+						JOptionPane.showMessageDialog(null, "Unos neuspješan.");
 					}//else
-					
-					
-					
 					
 				}
 				catch(Exception e1) {
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Greška pri unosu ");
 				}
 				
 			}
