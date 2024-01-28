@@ -146,7 +146,7 @@ public class Unos_knjiga {
 		lblNewLabel_1.setBounds(437, 49, 123, 14);
 		frame.getContentPane().add(lblNewLabel_1);
 
-////////////////////////////////////////stavljanje prezimena u combo box///////////////////////////////////////////////////////////
+////////////////////////////////////////stavljanje prezimena u combo box///////////
 		
 		JComboBox prezime = new JComboBox();
 		prezime.setBounds(557, 46, 117, 21);
@@ -167,7 +167,7 @@ public class Unos_knjiga {
 		}//catch
 		
 		
-//////////////////////stavljanje imena autora ovisno koje je prezime/////////////////////////////////////////////////////////////////
+//////////////////////stavljanje imena autora ovisno koje je prezime///////////////
 		
 		JComboBox ime = new JComboBox();
 		ime.setBounds(557, 97, 117, 21);
