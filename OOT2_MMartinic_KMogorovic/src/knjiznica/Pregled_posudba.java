@@ -98,7 +98,7 @@ public class Pregled_posudba {
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
-			String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe_string, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
+			String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
 					+ "FROM RWAposudba p\r\n"
 					+ "INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
 					+ "INNER JOIN RWAautor_knjiga ak ON k.id_knjiga = ak.id_knjiga\r\n"
@@ -198,7 +198,7 @@ public class Pregled_posudba {
 						String prezime_autora=rs.getString(4);
 						String prezime_clana=rs.getString(5);
 						int id_clana=rs.getInt(6);
-						String datum_posudbe=rs.getString(7);
+						Date datum_posudbe=rs.getDate(7);
 						String stvarni_dat_povrata=rs.getString(8);
 						float zakasnina=rs.getFloat(9);
 						int sifra_knjiznicar=rs.getInt(10);
@@ -315,7 +315,7 @@ public class Pregled_posudba {
 				{
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
-					String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe_string, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
+					String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
 							+ "FROM RWAposudba p\r\n"
 							+ "INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
 							+ "INNER JOIN RWAautor_knjiga ak ON k.id_knjiga = ak.id_knjiga\r\n"
@@ -337,7 +337,7 @@ public class Pregled_posudba {
 						String prezime_autora=rs.getString(4);
 						String prezime_clana=rs.getString(5);
 						int id_clana=rs.getInt(6);
-						String datum_posudbe=rs.getString(7);
+						Date datum_posudbe=rs.getDate(7);
 						String stvarni_dat_povrata=rs.getString(8);
 						float zakasnina=rs.getFloat(9);
 						int sifra_knjiznicar=rs.getInt(10);
