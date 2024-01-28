@@ -143,7 +143,7 @@ public class UP_rezervacija {
 			
 			catch(Exception e1)
 			{
-				JOptionPane.showMessageDialog(null, e1);
+				JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
 			}//catch
 			
 
@@ -592,7 +592,7 @@ public class UP_rezervacija {
 		            }
 		        } 
 		        catch (Exception e1) {
-		            JOptionPane.showMessageDialog(null, e1);
+		            JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
 		        }
 		    }
 		});
@@ -658,7 +658,7 @@ public class UP_rezervacija {
 
 			} //try
 			catch(Exception e1) {
-				JOptionPane.showMessageDialog(null, e1);
+				JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
 			} //catch
 			
 			

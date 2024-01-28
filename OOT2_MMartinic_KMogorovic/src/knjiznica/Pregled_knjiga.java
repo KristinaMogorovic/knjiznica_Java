@@ -214,7 +214,7 @@ public class Pregled_knjiga {
 					} //try
 					catch(Exception e1) 
 					{
-						JOptionPane.showMessageDialog(null, e1);
+						JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
 					} //catch
 			
 			
@@ -297,7 +297,7 @@ public class Pregled_knjiga {
 					} //try
 					catch(Exception e1)
 					{
-						JOptionPane.showMessageDialog(null, "Gre");
+						JOptionPane.showMessageDialog(null, "Greska pri spajanju na bazu");
 					} //catch
 					
 				} //if prvi

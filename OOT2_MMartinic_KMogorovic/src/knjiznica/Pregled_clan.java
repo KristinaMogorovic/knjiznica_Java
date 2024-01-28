@@ -126,7 +126,7 @@ public class Pregled_clan {
 			
 			catch(Exception e1)
 			{
-				JOptionPane.showMessageDialog(null, e1);
+				JOptionPane.showMessageDialog(null, "Došlo je do greške pri prikazu podataka");
 			}
 		
 	///////////////////////////////////////////////////////////*TRAŽILICA*///////////////////////////////////
@@ -207,7 +207,7 @@ public class Pregled_clan {
 					uc.showWindow();
 				}
 				catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Došlo je do greške pri otvaranju novog prozora");
 				}//catch
 			
 			}//public void
@@ -478,7 +478,7 @@ public class Pregled_clan {
 				
 			}//try
 			catch (Exception e1) {
-				JOptionPane.showMessageDialog(null, e1);
+				JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
 			}//catch
 			
 			}//public void action event

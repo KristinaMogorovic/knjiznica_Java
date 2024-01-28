@@ -32,6 +32,7 @@ public class Pregled_web {
 	private JTextField trazilica;
 	private JLabel lblNewLabel_1;
 	private JButton btnNewButton;
+	private JButton btnNewButton_1;
 
 	/**
 	 * Launch the application.
@@ -178,6 +179,41 @@ public class Pregled_web {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblNewLabel_1.setBounds(348, 40, 237, 28);
 		frame.getContentPane().add(lblNewLabel_1);
+		
+		btnNewButton_1 = new JButton("ponovno učitaj");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try
+				{
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					String upit1="SELECT * FROM RWAkontakt";
+					Statement stmt=con.createStatement();
+					ResultSet rs=stmt.executeQuery(upit1);
+					
+					DefaultTableModel model=(DefaultTableModel)tablica.getModel();
+					model.setRowCount(0);
+					while(rs.next()) {
+
+						String email=rs.getString(2);
+						String upit=rs.getString(3);
+						Date datum=rs.getDate(4);
+						
+						model.addRow(new Object[] { email, upit, datum});
+						
+					} //while
+					
+				}//try
+				
+				catch(Exception e1)
+				{
+					JOptionPane.showMessageDialog(null, "Greška pri dohvatu podataka");
+				}
+				
+			}
+		});
+		btnNewButton_1.setBounds(727, 153, 131, 28);
+		frame.getContentPane().add(btnNewButton_1);
 		
 		
 	} //public void inicialize

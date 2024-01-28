@@ -134,7 +134,7 @@ public class Pregled_posudba {
 		
 		catch(Exception e1)
 		{
-			JOptionPane.showMessageDialog(null, e1);
+			JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
 		}
 		
 		//////////////////////////////////////////////////////////////////////////*TRAŽILICA*//////////////////////////////////////
@@ -210,8 +210,8 @@ public class Pregled_posudba {
 				}//try
 				catch(Exception e1) 
 				{
-					JOptionPane.showMessageDialog(null, e1);
-					System.out.println(e1);
+					JOptionPane.showMessageDialog(null, "Greška pri spajanju na bazu");
+					//System.out.println(e1);
 				} //catch
 				
 			} //public void
@@ -285,7 +285,7 @@ public class Pregled_posudba {
 					} //try
 					catch(Exception e1) 
 					{
-						JOptionPane.showMessageDialog(null, e1);
+						JOptionPane.showMessageDialog(null, "greska pri spajanju na bazu");
 					} //catch
 					
 				} //if prvi
@@ -350,7 +350,7 @@ public class Pregled_posudba {
 				
 				catch(Exception e1)
 				{
-					JOptionPane.showMessageDialog(null, e1);
+					JOptionPane.showMessageDialog(null, "Greska pri spajanju na bazu");
 				}
 		
 			} //public void
@@ -428,7 +428,7 @@ public class Pregled_posudba {
 				}//try
 				catch(Exception e1) {
 					JOptionPane.showMessageDialog(null, "Došlo je do greške na bazi.");
-					System.out.println(e1);
+					//System.out.println(e1);
 				}//catch
 				
 			}//actionPerformed
