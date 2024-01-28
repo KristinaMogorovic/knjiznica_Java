@@ -173,7 +173,7 @@ public class Unos_clan {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 					
-					String unos="INSERT INTO RWAclan (ime, prezime, kontakt, adresa, lozinka, clanarina,datum_upisa_string) VALUES (?,?,?,?,?,?,?);";
+					String unos="INSERT INTO RWAclan (ime, prezime, kontakt, adresa, lozinka, clanarina, datum_upisa) VALUES (?,?,?,?,?,?,?);";
 					
 					PreparedStatement psInsert=con.prepareStatement(unos);
 					psInsert.setString(1, imes);

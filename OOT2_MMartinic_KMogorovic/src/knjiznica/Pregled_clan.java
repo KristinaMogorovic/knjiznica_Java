@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
+import javax.swing.JComboBox;
 
 public class Pregled_clan {
 
@@ -38,7 +39,6 @@ public class Pregled_clan {
 	private JTextField prezime;
 	private JTextField kontakt;
 	private JTextField adresa;
-	private JTextField clanarina;
 	private JTextField datum_upisa;
 	private JTextField datum_isteka;
 
@@ -75,7 +75,7 @@ public class Pregled_clan {
 		frame.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(41, 174, 993, 198);
+		scrollPane.setBounds(41, 174, 1314, 198);
 		frame.getContentPane().add(scrollPane);
 		
 		tablica = new JTable();
@@ -115,8 +115,8 @@ public class Pregled_clan {
 					String adresa=rs.getString(5);
 					
 					String clanarina=rs.getString(7);
-					Date datum_isteka=rs.getDate(9);
-					String datum_upisa_string=rs.getString(10);
+					String datum_isteka=rs.getString(9);
+					String datum_upisa_string=rs.getString(8);
 					
 					model.addRow(new Object[] {  id_clan, ime, prezime,kontakt, adresa, clanarina, datum_isteka, datum_upisa_string});
 					
@@ -170,8 +170,8 @@ public class Pregled_clan {
 						
 						String clanarina=rs.getString(7);
 					
-						Date datum_isteka=rs.getDate(9);
-						String datum_upisa_string=rs.getString(10);
+						String datum_isteka=rs.getString(9);
+						String datum_upisa_string=rs.getString(8);
 						
 						model.addRow(new Object[] {id_clan, ime, prezime,kontakt, adresa, clanarina, datum_isteka, datum_upisa_string});
 						
@@ -299,11 +299,11 @@ public class Pregled_clan {
 		frame.getContentPane().add(lblNewLabel_7);
 		
 		JLabel lblNewLabel_8 = new JLabel("Datum upisa:");
-		lblNewLabel_8.setBounds(238, 488, 83, 13);
+		lblNewLabel_8.setBounds(467, 491, 83, 13);
 		frame.getContentPane().add(lblNewLabel_8);
 		
 		JLabel lblNewLabel_9 = new JLabel("Datum isteka:");
-		lblNewLabel_9.setBounds(494, 488, 77, 13);
+		lblNewLabel_9.setBounds(723, 491, 77, 13);
 		frame.getContentPane().add(lblNewLabel_9);
 		
 		ime = new JTextField();
@@ -327,19 +327,35 @@ public class Pregled_clan {
 		frame.getContentPane().add(adresa);
 		adresa.setColumns(10);
 		
-		clanarina = new JTextField();
-		clanarina.setBounds(102, 485, 116, 19);
+		JComboBox clanarina = new JComboBox();
+		clanarina.setBounds(106, 484, 268, 21);
 		frame.getContentPane().add(clanarina);
-		clanarina.setColumns(10);
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+			
+			String upit="SELECT * FROM RWAclanarina";
+			Statement stmt=con.createStatement();
+			
+			ResultSet rs=stmt.executeQuery(upit);
+			
+			while (rs.next()) {
+				String podatak=rs.getString(1);
+				clanarina.addItem(podatak);
+			}
+		}
+		catch(Exception e2){
+			JOptionPane.showMessageDialog(null, "Greška pri dohvatu članarine");
+		}
 		
 		datum_upisa = new JTextField();
 		datum_upisa.setText("");
-		datum_upisa.setBounds(331, 485, 131, 19);
+		datum_upisa.setBounds(560, 488, 131, 19);
 		frame.getContentPane().add(datum_upisa);
 		datum_upisa.setColumns(10);
 		
 		datum_isteka = new JTextField();
-		datum_isteka.setBounds(581, 485, 147, 19);
+		datum_isteka.setBounds(810, 488, 147, 19);
 		frame.getContentPane().add(datum_isteka);
 		datum_isteka.setColumns(10);
 		
@@ -359,9 +375,9 @@ public class Pregled_clan {
 				adresa.setText(tablica.getValueAt(odabraniRedak, 4).toString());
 				
 				
-				clanarina.setText(tablica.getValueAt(odabraniRedak, 6).toString());
-				datum_upisa.setText(tablica.getValueAt(odabraniRedak, 8).toString());
-				datum_isteka.setText(tablica.getValueAt(odabraniRedak, 7).toString());
+				//clanarina.setToolTipText(tablica.getValueAt(odabraniRedak, 5).toString());
+				datum_upisa.setText(tablica.getValueAt(odabraniRedak, 7).toString());
+				datum_isteka.setText(tablica.getValueAt(odabraniRedak, 6).toString());
 			
 
 				//parsiramo u int jer je idclan tip int u sql bazi
@@ -385,7 +401,7 @@ public class Pregled_clan {
 			String kontakts=kontakt.getText();
 			String adresas=adresa.getText();
 
-			String clanarinas=clanarina.getText();
+			String clanarinas=(String) clanarina.getSelectedItem();
 			String datum_upisas=datum_upisa.getText();
 			String datum_istekas=datum_isteka.getText();
 			
@@ -395,7 +411,7 @@ public class Pregled_clan {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 				
-				String upit = "UPDATE RWAclan SET  ime=?, prezime=?, kontakt=?, adresa=?, lozinka=?, clanarina=?, datum_isteka=?,datum_upisa_string=?, email=? WHERE id_clan=?";
+				String upit = "UPDATE RWAclan SET  ime=?, prezime=?, kontakt=?, adresa=?,  clanarina=?, datum_isteka=?, datum_upisa=?  WHERE id_clan=?";
 				PreparedStatement ps=con.prepareStatement(upit);
 				
 				ps.setString(1, imes); //1 jer gledamo ? u upitu
@@ -403,14 +419,14 @@ public class Pregled_clan {
 				ps.setString(3, kontakts);
 				ps.setString(4, adresas);
 			
-				ps.setString(6, clanarinas);
+				ps.setString(5, clanarinas);
 				
-				ps.setString(7, datum_istekas);
-				ps.setString(8, datum_upisas);
+				ps.setString(6, datum_istekas);
+				ps.setString(7, datum_upisas);
 				
 
 				//dodajemo kako bi iz upita zna za koji id --> id iz odabraneg retka
-				ps.setInt(10, id_clanUpdate); //deseti ?
+				ps.setInt(8, id_clanUpdate); //deseti ?
 				
 				//izvršavanje upita
 				int updateRedak=ps.executeUpdate();
@@ -441,8 +457,8 @@ public class Pregled_clan {
 							String adresa=rs.getString(5);
 							
 							String clanarina=rs.getString(7);
-							Date datum_isteka=rs.getDate(9);
-							String datum_upisa_string=rs.getString(10);
+							String datum_isteka=rs.getString(9);
+							String datum_upisa_string=rs.getString(8);
 							
 							model.addRow(new Object[] {  id_clan, ime, prezime,kontakt, adresa, clanarina, datum_isteka, datum_upisa_string});
 							
@@ -480,6 +496,8 @@ public class Pregled_clan {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblNewLabel_1.setBounds(417, 34, 239, 30);
 		frame.getContentPane().add(lblNewLabel_1);
+		
+		
 		
 
 	

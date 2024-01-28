@@ -245,6 +245,31 @@ public class Unos_zaposlenik {
 					JOptionPane.showMessageDialog(null, "Greška pri spajanju na server.");
 				}
 				
+				//ispis u tablicu
+				DefaultTableModel model =(DefaultTableModel) tablica.getModel(); /////
+				model.setRowCount(0);
+				try {
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					
+					String upit = "SELECT sifra_knjiznicar, ime, prezime FROM RWA_knjiznicar";
+					Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
+					ResultSet rs=stmt.executeQuery(upit);
+					while (rs.next()) {
+						//preuzimanje podatka iz baze
+						int sifra=rs.getInt(1);
+						String ime=rs.getString(2);
+						String prezime=rs.getString(3);
+
+						//stavljanje podatka u tablicu
+						model.addRow(new Object[] {sifra, ime, prezime});
+					}
+				}//try
+				catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Greška u prikazu podataka tablice");
+				}//catch
+				
+				
 
 			}
 		});
@@ -361,7 +386,7 @@ public class Unos_zaposlenik {
 		
 		
 		
-		JButton btnNewButton_2 = new JButton("ažuriraj \r");
+		JButton btnNewButton_2 = new JButton("spremi promjene");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				

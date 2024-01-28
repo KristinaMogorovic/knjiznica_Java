@@ -71,17 +71,17 @@ public class Unos_posudba {
 		panel.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Ime:");
-		lblNewLabel_1.setBounds(10, 71, 75, 13);
+		lblNewLabel_1.setBounds(10, 100, 75, 13);
 		panel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Prezime:");
-		lblNewLabel_2.setBounds(10, 104, 75, 13);
+		lblNewLabel_2.setBounds(10, 68, 75, 13);
 		panel.add(lblNewLabel_2);
 		
 		 
 																//////PREZIME COMBOBOX///////
 		JComboBox prezime_clan = new JComboBox();
-		prezime_clan.setBounds(95, 100, 96, 21);
+		prezime_clan.setBounds(95, 64, 96, 21);
 		panel.add(prezime_clan);
 		
 		try {
@@ -103,10 +103,40 @@ public class Unos_posudba {
 				
 																////////IME COMBOBOX///////
 		JComboBox ime_clan = new JComboBox();
-		ime_clan.setBounds(95, 67, 96, 21);
+		ime_clan.setBounds(95, 96, 96, 21);
 		panel.add(ime_clan);
 		
-		try {
+		prezime_clan.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // Get the selected item when an item is chosen
+		        String odabrano_prezime = (String) prezime_clan.getSelectedItem();
+
+		        try {
+		            Class.forName("com.mysql.cj.jdbc.Driver");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+
+		            String upit = "SELECT ime FROM RWAclan WHERE prezime=?";
+		           
+		            PreparedStatement psInsert = con.prepareStatement(upit);
+		            psInsert.setString(1, odabrano_prezime);
+
+		            ResultSet rs = psInsert.executeQuery();
+
+		            ime_clan.removeAllItems();
+
+		            while (rs.next()) {
+		                String podatak = rs.getString(1);
+		                ime_clan.addItem(podatak);
+		            }
+		        } 
+		        catch (Exception e1) {
+		            JOptionPane.showMessageDialog(null, "Greška pri dohvatu podatka o ISBN knjige");
+		        }
+		    }
+		});
+		
+		/*try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
 			String upit = "SELECT ime FROM RWAclan;";
@@ -119,7 +149,7 @@ public class Unos_posudba {
 		}//try
 		catch (Exception e1) {
 			JOptionPane.showMessageDialog(null, "Greška pri dohvatu podataka o imenu člana.");
-		}//catch
+		}//catch*/
 		
 //////////////////////////////////////////////////////////////////////////////////////////		
 	
@@ -142,7 +172,7 @@ public class Unos_posudba {
 		JLabel lblNewLabel_8 = new JLabel("Naziv:");
 		lblNewLabel_8.setBounds(10, 66, 45, 13);
 		panel_1.add(lblNewLabel_8);
-													////////////////NAZIV COMBOBOX////////////
+													////////////////NAZIV  knjige COMBOBOX////////////
 		JComboBox naziv = new JComboBox();
 		naziv.setBounds(65, 62, 172, 21);
 		panel_1.add(naziv);

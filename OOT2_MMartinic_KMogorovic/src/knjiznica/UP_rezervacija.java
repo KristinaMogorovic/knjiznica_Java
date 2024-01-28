@@ -453,11 +453,11 @@ public class UP_rezervacija {
 		unos.setLayout(null);
 		
 		JLabel lblNewLabel_2 = new JLabel("ime člana:");
-		lblNewLabel_2.setBounds(39, 105, 96, 13);
+		lblNewLabel_2.setBounds(39, 137, 96, 13);
 		unos.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_3 = new JLabel("Prezime člana:");
-		lblNewLabel_3.setBounds(39, 138, 107, 13);
+		lblNewLabel_3.setBounds(39, 104, 107, 13);
 		unos.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_5 = new JLabel("datum rezervacije:");
@@ -477,33 +477,10 @@ public class UP_rezervacija {
 		unos.add(datum_rezervacije);
 		datum_rezervacije.setColumns(10);
 		
-		/////////////////////ime combo box
-				
-		JComboBox ime_clan = new JComboBox();
-		ime_clan.setBounds(144, 101, 112, 21);
-		unos.add(ime_clan);
-		
-		try {
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
-		
-		String upit = "SELECT ime FROM RWAclan;";
-		Statement stmt=con.createStatement();
-		ResultSet rs=stmt.executeQuery(upit);
-		
-		while (rs.next()) {
-			String podatak =rs.getString(1);
-			ime_clan.addItem(podatak);
-		}
-		}//try
-		catch (Exception e1) {
-		JOptionPane.showMessageDialog(null, "Greška pri dohvatu imena člana");
-		}//catch
-		
-		/////////////////////prezime combobox
+		/////////////////////prezime combobox/////////////////////////////////////////////////////////////
 		
 		JComboBox prezime_clan = new JComboBox();
-		prezime_clan.setBounds(144, 134, 112, 21);
+		prezime_clan.setBounds(144, 100, 112, 21);
 		unos.add(prezime_clan);
 		
 		try {
@@ -522,6 +499,44 @@ public class UP_rezervacija {
 		catch (Exception e1) {
 		JOptionPane.showMessageDialog(null, "Greška pri dohvaćanju prezimena člana");
 		}//catch
+		
+		/////////////////////ime combo box
+				
+		JComboBox ime_clan = new JComboBox();
+		ime_clan.setBounds(144, 133, 112, 21);
+		unos.add(ime_clan);
+		
+		prezime_clan.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        // Get the selected item when an item is chosen
+		        String odabrano_prezime = (String) prezime_clan.getSelectedItem();
+
+		        try {
+		            Class.forName("com.mysql.cj.jdbc.Driver");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+
+		            String upit = "SELECT ime FROM RWAclan WHERE prezime=?";
+		           
+		            PreparedStatement psInsert = con.prepareStatement(upit);
+		            psInsert.setString(1, odabrano_prezime);
+
+		            ResultSet rs = psInsert.executeQuery();
+
+		            ime_clan.removeAllItems();
+
+		            while (rs.next()) {
+		                String podatak = rs.getString(1);
+		                ime_clan.addItem(podatak);
+		            }
+		        } 
+		        catch (Exception e1) {
+		            JOptionPane.showMessageDialog(null, "Greška pri dohvatu podatka o ISBN knjige");
+		        }
+		    }
+		});
+		
+
 		
 		///////////////////////////////// NAZIV KNJIGE COMBOBOX
 		
