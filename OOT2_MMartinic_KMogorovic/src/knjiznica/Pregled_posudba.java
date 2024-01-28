@@ -152,7 +152,27 @@ public class Pregled_posudba {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
 					
-					String upit="SELECT * FROM RWAposudba WHERE id_clan LIKE ? OR id_knjiga LIKE ? OR sifra_knjiznicar LIKE ? OR datum_posudbe LIKE ? OR datum_povrata LIKE ? OR stvarni_dat_povrata LIKE ? OR zakasnina LIKE ? ";
+					String upit="SELECT *\r\n"
+							+ "FROM (\r\n"
+							+ "    SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe, p.zz_dat_povrata_string, p.zakasnina, posudba.sifra_knjiznicar\r\n"
+							+ "    FROM RWAposudba p\r\n"
+							+ "    INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
+							+ "    INNER JOIN RWAautor_knjiga ak ON k.id_knjiga = ak.id_knjiga\r\n"
+							+ "    INNER JOIN RWAautor a ON ak.id_autor = a.id_autor\r\n"
+							+ "    INNER JOIN RWAclan c ON p.id_clan = c.id_clan\r\n"
+							+ "    LEFT JOIN RWA_knjiznicar posudba ON p.sifra_knjiznicar = posudba.sifra_knjiznicar\r\n"
+							+ ") AS tmp\r\n"
+							+ "WHERE \r\n"
+							+ "    tmp.naziv_knjige LIKE ? OR\r\n"
+							+ "    tmp.ime_autora LIKE ? OR\r\n"
+							+ "    tmp.prezime_autora LIKE ? OR\r\n"
+							+ "    tmp.prezime_clana LIKE ? OR\r\n"
+							+ "    tmp.id_clan LIKE ? OR\r\n"
+							+ "    tmp.zz_dat_povrata_string LIKE ? OR \r\n"
+							+ "	 tmp.datum_posudbe LIKE ? OR \r\n"
+							+ "	 tmp.sifra_knjiznicar LIKE ? \r\n"
+							+ "	 ;\r\n"
+							+ " ";
 					
 					PreparedStatement ps=con.prepareStatement(upit);
 					ps.setString(1, "%"+pretragas+"%");
@@ -162,6 +182,7 @@ public class Pregled_posudba {
 					ps.setString(5, "%"+pretragas+"%");
 					ps.setString(6, "%"+pretragas+"%");
 					ps.setString(7, "%"+pretragas+"%");
+					ps.setString(8, "%"+pretragas+"%");
 					
 					ResultSet rs=ps.executeQuery();
 					
@@ -172,15 +193,17 @@ public class Pregled_posudba {
 					while(rs.next()) {
 
 						int id_posudbe=rs.getInt(1); 
-						int id_clan=rs.getInt(2);
-						int id_knjiga=rs.getInt(3);
-						int sifra_knjiznicar=rs.getInt(4);
-						Date datum_posudbe=rs.getDate(5);
-						Date datum_povrata=rs.getDate(6);
-						Date stvarni_dat_povrata=rs.getDate(7);
-						float zakasnina=rs.getFloat(8);
+						String naziv_knjige=rs.getString(2);
+						String ime_autora=rs.getString(3);
+						String prezime_autora=rs.getString(4);
+						String prezime_clana=rs.getString(5);
+						int id_clana=rs.getInt(6);
+						String datum_posudbe=rs.getString(7);
+						String stvarni_dat_povrata=rs.getString(8);
+						float zakasnina=rs.getFloat(9);
+						int sifra_knjiznicar=rs.getInt(10);
 						
-						model.addRow(new Object[] {id_posudbe, id_clan, id_knjiga, sifra_knjiznicar, datum_posudbe, datum_povrata, stvarni_dat_povrata, zakasnina});
+						model.addRow(new Object[] {id_posudbe, naziv_knjige, ime_autora, prezime_autora, prezime_clana, id_clana, datum_posudbe, stvarni_dat_povrata, zakasnina, sifra_knjiznicar});
 						
 					} //while
 					
@@ -188,6 +211,7 @@ public class Pregled_posudba {
 				catch(Exception e1) 
 				{
 					JOptionPane.showMessageDialog(null, e1);
+					System.out.println(e1);
 				} //catch
 				
 			} //public void
