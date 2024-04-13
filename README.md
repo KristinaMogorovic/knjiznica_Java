@@ -1,0 +1,1 @@
+An application that was made as a school project. It starts with the registration of the librarian and has the possibility of registering and viewing books, authors, members, employees and borrowing books in the library. It is linked to a website where users can book a book or send an inquiry. Reservations and inquiries from the web are visible in the desktop application.
