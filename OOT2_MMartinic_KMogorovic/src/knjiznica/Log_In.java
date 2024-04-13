@@ -95,7 +95,7 @@ public class Log_In {
 				try {
 					
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					
 					String upit="SELECT * FROM RWA_knjiznicar WHERE sifra_knjiznicar=? AND lozinka=?";//pi�emo SQL kod koj �e se izvr�it na bazi
