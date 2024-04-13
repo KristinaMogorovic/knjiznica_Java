@@ -114,7 +114,7 @@ public class UP_rezervacija {
 			try
 			{
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 				
 				String upit="SELECT r.id_rezervacija, c.ime AS ime_clana, c.prezime AS prezime_clana,k.naziv AS naziv_knjige,  r. datum_rezervacije\r\n"
 						+ "FROM RWArezervacija r\r\n"
@@ -160,7 +160,7 @@ public class UP_rezervacija {
 				try {
 					
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit="SELECT *\r\n"
 							+ "FROM ( \r\n"
@@ -235,7 +235,7 @@ public class UP_rezervacija {
 						int id_rezervacije=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
 						
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 						
 						String upit="DELETE  FROM RWArezervacija WHERE id_rezervacija=?";
 						
@@ -340,7 +340,7 @@ public class UP_rezervacija {
 				try 
 				{
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					//selektiranje id clana
 					String upitClan="SELECT id_clan FROM RWAclan WHERE ime='"+ime_clans+"' AND prezime='"+prezime_clans+"' ";
@@ -485,7 +485,7 @@ public class UP_rezervacija {
 		
 		try {
 		Class.forName("com.mysql.cj.jdbc.Driver");
-		Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+		Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 		
 		String upit = "SELECT prezime FROM RWAclan;";
 		Statement stmt=con.createStatement();
@@ -514,7 +514,7 @@ public class UP_rezervacija {
 
 		        try {
 		            Class.forName("com.mysql.cj.jdbc.Driver");
-		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "****");
 
 		            String upit = "SELECT ime FROM RWAclan WHERE prezime=?";
 		           
@@ -546,7 +546,7 @@ public class UP_rezervacija {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			
 			String upit = "SELECT naziv FROM RWAknjiga;";
 			Statement stmt=con.createStatement();
@@ -575,7 +575,7 @@ public class UP_rezervacija {
 
 		        try {
 		            Class.forName("com.mysql.cj.jdbc.Driver");
-		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "****");
 
 		            String upit = "SELECT isbn FROM RWAknjiga WHERE naziv=?";
 		           
@@ -613,7 +613,7 @@ public class UP_rezervacija {
 			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 				
 				//selektiranje id clana
 				String upitClan="SELECT id_clan FROM RWAclan WHERE ime='"+imes+"' AND prezime='"+prezimes+"' ";
