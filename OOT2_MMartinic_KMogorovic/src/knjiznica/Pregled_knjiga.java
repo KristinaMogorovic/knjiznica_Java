@@ -93,7 +93,7 @@ public class Pregled_knjiga {
 			try
 			{
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 				
 				
 				String upit="SELECT k.id_knjiga, k.naziv AS naziv_knjige, k.isbn, k.nakladnik, kl.odjeljak, a.ime AS ime_autora, a.prezime AS prezime_autora,k.ukupan_broj,k.rezervirani, k.posudeni\r\n"
@@ -145,7 +145,7 @@ public class Pregled_knjiga {
 					try {
 										
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 						
 								String upit1="SELECT *\r\n"
 								+ "FROM (\r\n"
@@ -262,7 +262,7 @@ public class Pregled_knjiga {
 						int id_knjiga=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString()); //parsiranje jer je id tip int u heidi
 						
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 						
 						//najprije treba izbrisat podatak child tablice da bi se moga podatak u parent izbrisat
 						
@@ -358,7 +358,7 @@ public class Pregled_knjiga {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					String upit="UPDATE RWAknjiga SET ukupan_broj=? WHERE id_knjiga=?;";
 					PreparedStatement ps=con.prepareStatement(upit);
