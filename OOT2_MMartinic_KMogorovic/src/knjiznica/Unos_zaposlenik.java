@@ -167,7 +167,7 @@ public class Unos_zaposlenik {
 		DefaultTableModel model =(DefaultTableModel) tablica.getModel(); /////
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			
 			String upit = "SELECT sifra_knjiznicar, ime, prezime FROM RWA_knjiznicar";
 			Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
@@ -205,7 +205,7 @@ public class Unos_zaposlenik {
 				try {
 					if (lozinkas.equals(ponLozinkas)) { //ako se lozinke podudaraju
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 						
 						//provjera dal sifra zaposlenika vec postoji
 						String provjera = "SELECT * FROM RWA_knjiznicar WHERE sifra_knjiznicar=?";
@@ -250,7 +250,7 @@ public class Unos_zaposlenik {
 				model.setRowCount(0);
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					String upit = "SELECT sifra_knjiznicar, ime, prezime FROM RWA_knjiznicar";
 					Statement stmt=con.createStatement();//pripremanje "tunela" za slanje upita
@@ -302,7 +302,7 @@ public class Unos_zaposlenik {
 						
 						int sifra=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 						
 						String upit="DELETE FROM RWA_knjiznicar WHERE sifra_knjiznicar=?";
 						PreparedStatement ps=con.prepareStatement(upit);
@@ -399,7 +399,7 @@ public class Unos_zaposlenik {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit = "UPDATE RWA_knjiznicar SET  ime=?, prezime=? WHERE sifra_knjiznicar=?";
 					PreparedStatement ps=con.prepareStatement(upit);
