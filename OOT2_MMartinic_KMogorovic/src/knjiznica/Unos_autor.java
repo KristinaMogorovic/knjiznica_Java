@@ -81,7 +81,7 @@ public class Unos_autor {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					String upit= "INSERT INTO RWAautor (ime, prezime) VALUES (?, ?);";
 					PreparedStatement psInsert=con.prepareStatement(upit);
