@@ -89,7 +89,7 @@ public class Pregled_autor {
 		try
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 			String upit="SELECT * FROM RWAautor";
 			Statement stmt=con.createStatement();
 			ResultSet rs=stmt.executeQuery(upit);
@@ -144,7 +144,7 @@ public class Pregled_autor {
 				try 
 				{
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit="SELECT * FROM RWAautor WHERE ime LIKE ? OR prezime LIKE ?";
 					
@@ -206,7 +206,7 @@ public class Pregled_autor {
 						int id_autor=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
 						
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 						
 						String upit="DELETE FROM RWAautor WHERE id_autor=?";
 						PreparedStatement ps=con.prepareStatement(upit);
@@ -305,7 +305,7 @@ public class Pregled_autor {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit = "UPDATE RWAautor SET  ime=?, prezime=? WHERE id_autor=?";
 					PreparedStatement ps=con.prepareStatement(upit);
