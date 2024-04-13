@@ -134,7 +134,7 @@ public class Unos_clan {
 		try {
 						
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "****");
 			
 			String upit="SELECT * FROM RWAclanarina";
 			Statement stmt=con.createStatement();
@@ -171,7 +171,7 @@ public class Unos_clan {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					String unos="INSERT INTO RWAclan (ime, prezime, kontakt, adresa, lozinka, clanarina, datum_upisa) VALUES (?,?,?,?,?,?,?);";
 					
