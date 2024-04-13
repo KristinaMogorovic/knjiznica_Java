@@ -97,7 +97,7 @@ public class Pregled_posudba {
 		try
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 			String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe, p.stvarni_dat_povrata, p.zakasnina, posudba.sifra_knjiznicar\r\n"
 					+ "FROM RWAposudba p\r\n"
 					+ "INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
@@ -150,7 +150,7 @@ public class Pregled_posudba {
 				try {
 					
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit="SELECT *\r\n"
 							+ "FROM (\r\n"
@@ -260,7 +260,7 @@ public class Pregled_posudba {
 						int id_posudba=Integer.parseInt(tablica.getValueAt(odabraniRedak, 0).toString());
 						
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+						Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 						
 						String upit="DELETE FROM RWAposudba WHERE id_posudbe=?";
 						
@@ -314,7 +314,7 @@ public class Pregled_posudba {
 				try
 				{
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					String upit="SELECT p.id_posudbe, k.naziv AS naziv_knjige, a.ime AS ime_autora, a.prezime AS prezime_autora, c.prezime AS prezime_clana, p.id_clan, p.datum_posudbe, p.stvarni_dat_povrata, p.zakasnina, posudba.sifra_knjiznicar\r\n"
 							+ "FROM RWAposudba p\r\n"
 							+ "INNER JOIN RWAknjiga k ON p.id_knjiga = k.id_knjiga\r\n"
@@ -413,7 +413,7 @@ public class Pregled_posudba {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String insert="UPDATE RWAposudba SET stvarni_dat_povrata='"+stv_dat+"' WHERE id_posudbe='"+id_odabrane_posudbe+"';" ;
 					PreparedStatement psInsertDatum=con.prepareStatement(insert); 
