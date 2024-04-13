@@ -153,7 +153,7 @@ public class Unos_knjiga {
 		frame.getContentPane().add(prezime);
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			String upit = "SELECT prezime FROM RWAautor;";
 			Statement stmt=con.createStatement();
 			ResultSet rs=stmt.executeQuery(upit);
@@ -182,7 +182,7 @@ public class Unos_knjiga {
 
 		        try {
 		            Class.forName("com.mysql.cj.jdbc.Driver");
-		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "****");
 
 		            String upit = "SELECT ime FROM RWAautor WHERE prezime=?";
 		           
@@ -211,7 +211,7 @@ public class Unos_knjiga {
 		frame.getContentPane().add(odjeljak);
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			
 			String upit = "SELECT * FROM RWAklasifikacijska_oznaka";
 			Statement stmt=con.createStatement();
@@ -253,7 +253,7 @@ public class Unos_knjiga {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					//selektiranje id odabrane klasifikacijske oznake - FK
 					String upitOdjeljak="SELECT id_KlasOznake FROM RWAklasifikacijska_oznaka WHERE odjeljak='"+odjeljaks+"'";
@@ -297,7 +297,7 @@ public class Unos_knjiga {
 				//upis u agregaciju knjige-autor
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					//selektiranje id autora knjige
 					
