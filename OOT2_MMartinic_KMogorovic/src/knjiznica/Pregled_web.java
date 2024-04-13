@@ -94,7 +94,7 @@ public class Pregled_web {
 		try
 		{
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 			String upit1="SELECT * FROM RWAkontakt";
 			Statement stmt=con.createStatement();
 			ResultSet rs=stmt.executeQuery(upit1);
@@ -130,7 +130,7 @@ public class Pregled_web {
 				try {
 					
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit1="SELECT * FROM RWAkontakt WHERE email LIKE ? OR upit LIKE ? OR datum LIKE ?";
 					
@@ -186,7 +186,7 @@ public class Pregled_web {
 				try
 				{
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					String upit1="SELECT * FROM RWAkontakt";
 					Statement stmt=con.createStatement();
 					ResultSet rs=stmt.executeQuery(upit1);
