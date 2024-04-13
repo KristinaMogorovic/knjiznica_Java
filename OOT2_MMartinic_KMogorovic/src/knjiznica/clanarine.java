@@ -100,7 +100,7 @@ public class clanarine {
 			try
 			{
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+				Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 				
 				String upit="SELECT * FROM RWAclanarina";
 				Statement stmt=con.createStatement();
@@ -140,7 +140,7 @@ public class clanarine {
 	
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					//uzimanje podataka
 					
@@ -233,7 +233,7 @@ public class clanarine {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929");
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****");
 					
 					String upit = "UPDATE RWAclanarina SET  vrsta=?, cijena=? WHERE vrsta=?";
 					PreparedStatement ps=con.prepareStatement(upit);
