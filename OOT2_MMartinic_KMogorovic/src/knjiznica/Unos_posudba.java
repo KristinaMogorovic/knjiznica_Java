@@ -86,7 +86,7 @@ public class Unos_posudba {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			
 			String upit = "SELECT prezime FROM RWAclan;";
 			Statement stmt=con.createStatement();
@@ -114,7 +114,7 @@ public class Unos_posudba {
 
 		        try {
 		            Class.forName("com.mysql.cj.jdbc.Driver");
-		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "****");
 
 		            String upit = "SELECT ime FROM RWAclan WHERE prezime=?";
 		           
@@ -138,7 +138,7 @@ public class Unos_posudba {
 		
 		/*try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			String upit = "SELECT ime FROM RWAclan;";
 			Statement stmt=con.createStatement();
 			ResultSet rs=stmt.executeQuery(upit);
@@ -180,7 +180,7 @@ public class Unos_posudba {
 	
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			
 			String upit = "SELECT naziv FROM RWAknjiga;";
 			Statement stmt=con.createStatement();
@@ -203,7 +203,7 @@ public class Unos_posudba {
 		
 	/*	try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+			Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 			
 			String upit = "SELECT isbn FROM RWAknjiga;";
 			Statement stmt=con.createStatement();
@@ -227,7 +227,7 @@ public class Unos_posudba {
 
 		        try {
 		            Class.forName("com.mysql.cj.jdbc.Driver");
-		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "6929");
+		            Connection con = DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC", "kmogorovi", "****");
 
 		            String upit = "SELECT isbn FROM RWAknjiga WHERE naziv=?";
 		           
@@ -295,7 +295,7 @@ public class Unos_posudba {
 				
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","6929") ;
+					Connection con=DriverManager.getConnection("jdbc:mysql://student.veleri.hr/kmogorovi?serverTimezone=UTC","kmogorovi","****") ;
 					
 					//selektiranje id clana
 					String upitClan="SELECT id_clan FROM RWAclan WHERE ime='"+imes+"' AND prezime='"+prezimes+"' ";
